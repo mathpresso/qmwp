@@ -45,6 +45,35 @@ digits_decimal_kr = {
 
 
 def comb_num_seq_counting():
+    """
+    Rule
+    영어 대문자 : 사람이름
+    영어 소문자 : 수 or 숫자
+    num_seq : 나열된 수 or 숫자
+    {영어 소문자}_kr : 숫자, 수 한글화
+
+    t_1_1
+        num_seq 중에서 서로 다른 숫자 x개를 뽑아 만들 수 있는 가장 큰 x_kr 자리 수를 구하시오.
+
+    t_1_2
+        x부터 y까지 자연수를 쓰려고 합니다. 숫자 z는 모두 몇 번 써야 합니까?
+
+    t_1_3
+        x보다 작은 자연수 중에서 서로 다른 y_kr 수를 동시에 뽑으려고 합니다. y_kr 수의 합이 z인 경우의 수를 구하시오.
+
+    t_1_4
+        num_seq 중에서 x개를 뽑아 한 번씩 사용하여 x_kr 자리 수를 만들려고 합니다. 만들 수 있는 수 중에서 y_kr의 자리 숫자가 z인 가장 큰 수를 쓰시오.
+
+    t_1_5
+        num_seq 를 한 번씩만 사용하여 x_kr 자리 수를 2개 만들려고 합니다. 만든 두 수의 차가 가장 크게 될 때 그 차는 얼마입니까?
+
+    t_1_6
+        num_seq 중에서 2개를 골라 곱을 구하려고 합니다. 두 수의 곱이 가장 큰 경우와 가장 작은 경우의 합을 구하시오.
+
+    t_1_7
+        num_seq 중 합이 x가 되는 두 수로 곱셈식을 만들었습니다. 두 수의 곱이 가장 큰 경우와 가장 작은 경우의 합을 구하시오.
+    """
+
     sample_l = []
 
     seq_len = random.randint(3, 7)
@@ -166,6 +195,48 @@ def comb_num_seq_counting():
     ]
 
     sample_l.append(random.choice(t_1_4))
+
+    tmp_num_1 = random.randint(2, 3)
+    seq_len_1_6 = 2 * tmp_num_1
+    tmp_num_seq_l = random.sample(range(0, 10), seq_len_1_6)
+    num_seq_str_1_6 = tmp_num_seq_l.__repr__()[1:-1]
+    seq_n_string_1_6 = '\n'.join([f"n{idx} = {elem}" for idx, elem in enumerate(tmp_num_seq_l)])
+
+    t_1_5 = [
+        (f'{num_seq_str_1_6} 를 한 번씩만 사용하여 {digits[tmp_num_1]} 자리 수를 2개 만들려고 합니다. 만든 두 수의 차가 가장 크게 될 때 그 차는 얼마{q_eomis}',
+         f'{seq_n_string_1_6}\n'
+         f'n{seq_len_1_6} = 1\n'
+         f'n{seq_len_1_6+1} = {tmp_num_1}\n'
+         f'n{seq_len_1_6+2} = 2\n'
+         f'l0 = [{num_seq_str_1_6}]\n'
+         f'num_permutations_partition_sub(l0)\n'
+         f'answer = max(result)'),
+    ]
+
+    sample_l.append(random.choice(t_1_5))
+
+    t_1_6 = [
+        (f'{num_seq_str} 중에서 2개를 골라 곱을 구하려고 합니다. 두 수의 곱이 가장 큰 경우와 가장 작은 경우의 합을 {simple_q_eomis}',
+         f'{seq_n_string}\n'
+         f'n{seq_len} = 2\n'
+         f'l0 = [{num_seq_str}]\n'
+         f'num_mul_permutations(l0)\n'
+         f'answer = max(result) + min(result)'),
+    ]
+
+    sample_l.append(random.choice(t_1_6))
+
+    t_1_7 = [
+        (f'{num_seq_str} 중 합이 {add_val_in_seq}가 되는 두 수로 곱셈식을 만들었습니다. 두 수의 곱이 가장 큰 경우와 가장 작은 경우의 합을 {simple_q_eomis}',
+         f'{seq_n_string}\n'
+         f'n{seq_len} = {add_val_in_seq}\n'
+         f'l0 = [{num_seq_str}]\n'
+         f'num_permutations_filter_add(l0, n{seq_len})\n'
+         f't0 = [c[0] * c[1] for c in result]\n'
+         f'answer = max(t0) + min(t0)'),
+    ]
+
+    sample_l.append(random.choice(t_1_7))
 
     return sample_l
 

@@ -193,6 +193,42 @@ def postprocessing(code, question):
             tmp += "print(processed)"
             processed = get_answer(tmp)
             remains.append(processed)
+        elif "num_permutations_partition_sub(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_NUM_PERMUTATIONS_PARTITION_SUB
+            tmp += NEWLINE
+            indent = line.rpartition("num_permutations_partition_sub(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "num_mul_permutations(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_NUM_MUL_PERMUTATIONS
+            tmp += NEWLINE
+            indent = line.rpartition("num_mul_permutations(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "num_permutations_filter_add(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_NUM_PERMUTATIONS_FILTER_ADD
+            tmp += NEWLINE
+            indent = line.rpartition("num_permutations_filter_add(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
         else:
             remains.append(line)
     code = NEWLINE.join(imports + remains)

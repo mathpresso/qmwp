@@ -7,6 +7,9 @@ IMPORT_COMBINATIONS = "from itertools import combinations"
 IMPORT_NUM_PERMUTATIONS = "from utils.combinatorics import num_permutations"
 IMPORT_COUNT_DIGIT = "from utils.combinatorics import count_digit"
 IMPORT_FILTER_SUM = "from utils.combinatorics import filter_sum"
+IMPORT_NUM_PERMUTATIONS_PARTITION_SUB = "from utils.combinatorics import num_permutations_partition_sub"
+IMPORT_NUM_MUL_PERMUTATIONS = "from utils.combinatorics import num_mul_permutations"
+IMPORT_NUM_PERMUTATIONS_FILTER_ADD = "from utils.combinatorics import num_permutations_filter_add"
 
 
 # lambda functions
