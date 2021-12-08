@@ -365,3 +365,123 @@ def equation_2():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def range_condition_1():
+    """
+    template: "a부터 b까지의 홀수의 합을 구하시오."
+    """
+
+    start, end = sorted(random.sample(range(1, 1000), 2))
+    if end + 20 < start:
+        end = random.randint(start + 20, 1100)
+
+    n = random.randint(2, 9)
+    n_r = postfix(str(n), '으로')
+    r = random.randint(0, n - 1)
+
+    range_d = {
+        'gte_lte': [
+            f'{start}부터 {end}까지',
+            f'{start}부터 {end}까지의 자연수 중에서',
+            f'{start}부터 {end}까지의 자연수 중에서',
+            f'{start}보다 크거나 같고 {end}보다 작거나 같은',
+            f'{start}보다 크거나 같고 {end}보다 크지 않은',
+            f'{start}보다 작지 않고 {end}보다 작거나 같은',
+            f'{start}보다 작지 않고 {end}보다 크지 않은',
+        ],
+        'gt_lt': [
+            f'{start}보다 크고 {end}보다 작은',
+            f'{start}보다 작거나 같지 않고 {end}보다 작은',
+            f'{start}보다 크고 {end}보다 크거나 같지 않은',
+            f'{start}보다 작거나 같지 않고 {end}보다 크거나 같지 않은',
+        ],
+        'gt_lte': [
+            f'{start}보다 크고 {end}보다 작거나 같은',
+            f'{start}보다 크고 {end}보다 크지 않은',
+            f'{start}보다 작거나 같지 않고 {end}보다 작거나 같은',
+            f'{start}보다 작거나 같지 않고 {end}보다 크지 않은',
+        ],
+        'gte_lt': [
+            f'{start}보다 크거나 같고 {end}보다 작은',
+            f'{start}보다 크거나 같고 {end}보다 크거나 같지 않은',
+            f'{start}보다 작지 않고 {end}보다 작은',
+            f'{start}보다 작지 않고 {end}보다 크거나 같지 않은',
+        ],
+    }
+
+    condition_d = {
+        'even': [
+            ('짝수', ""),
+            ('2로 나누었을때 나머지가 0인 수', "n2 = 2\nn3 = 0"),
+            ('2로 나누어 떨어지는 수', "n2 = 2"),
+        ],
+        'odd': [
+            ('홀수', ""),
+            ('2로 나누었을때 나머지가 1인 수', "n2 = 2\nn3 = 1"),
+            ('2로 나누어 떨어지지 않는 수', "n2 = 2"),
+        ],
+        'mod': [
+            (f'{n_r} 나누었을때 나머지가 {r}인 수', f"n2 = {n}\nn3 = {r}"),
+            (f'{n_r} 나누면 {r}이 남는 수', f"n2 = {n}\nn3 = {r}"),
+        ],
+        'multiple': [
+            (f'{n}의 배수', f"n2 = {n}"),
+            (f'{n_r} 나누어 떨어지는 수', f"n2 = {n}"),
+        ],
+    }
+
+    range_key = random.choice(list(range_d.keys()))
+    range_str = random.choice(range_d[range_key])
+    condition_key = random.choice(list(condition_d.keys()))
+    condition_str, cond_init = random.choice(condition_d[condition_key])
+
+    target_key = random.randint(0, 1)
+    targets = [
+        ["의 합을 구하시오.", "를 모두 더하면?", "를 모두 더한 값은?"],
+        ["의 개수는 모두 몇 개입니까?", "는 전부 몇 개입니까?", "의 개수를 구하시오."],
+    ]
+    target_str = random.choice(targets[target_key])
+
+    question = f"{range_str} {condition_str}{target_str}"
+
+    init_n = []
+    model_logic = []
+
+    init_n.append(f"n0 = {start}")
+    init_n.append(f"n1 = {end}")
+    if cond_init:
+        init_n.append(cond_init)
+
+    st_value = "n0 + 1"
+    ed_value = "n1"
+    if "gte" in range_key:
+        st_value = "n0"
+    if "lte" in range_key:
+        ed_value = "n1 + 1"
+
+    n_value = "n2"
+    r_value = "n3"
+    if condition_key in ["even", "odd", "multiple"]:
+        if "n3" not in cond_init:
+            r_value = "0"
+        if "n2" not in cond_init:
+            n_value = "2"
+
+    if target_key == 0:
+        func = "sum"
+    else:
+        func = "len"
+
+    model_logic.append(f"result = []")
+    model_logic.append(f"for i in range({st_value}, {ed_value}):")
+    model_logic.append(f"\tif i % {n_value} == {r_value}:")
+    model_logic.append(f"\t\tresult.append(i)")
+    model_logic.append(f"answer = {func}(result)")
+
+    model_output_lst = init_n + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
