@@ -557,3 +557,88 @@ def average_1():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def ratio_1():
+    """
+    template: "A네 반 전체 학생 수는 x명입니다. 그중에서 남학생은 전체의 y_fraction 입니다. 남학생 중에서 안경을 낀 학생은
+               남학생 전체의 z_fraction 입니다. A네 반에서 안경을 끼지 않은 남학생은 몇 명입니까?"
+    """
+
+    p = random.choice(PEOPLE_NAMES)
+    s = random.choice(["남학생", "여학생"])
+    target_s = random.choice(["남학생", "여학생"])
+    p_e = pick_e(p)
+
+    op1 = random.choice([
+        f"{p_e}네 반 ",
+        "",
+    ])
+
+    eomi1 = random.choice([
+        "입니다.",
+        "이고,"
+    ])
+
+    op2 = random.choice([
+        "그 중에서 ",
+        "이 중에서 ",
+        ""
+    ])
+
+    eomi2 = random.choice([
+        "입니다.", "이고"
+    ])
+
+    eomi3 = random.choice([
+        "입니다.", "일 때"
+    ])
+
+    op3 = ""
+    if op1:
+        op3 = op1[:-1] + "에서 "
+
+    target_key = random.randint(0, 1)
+    targets = [
+        f"{op3}안경을 끼지 않은 {target_s}은 몇 명입니까?",
+        f"{op3}안경을 낀 {target_s}은 몇 명입니까?"
+    ]
+    target_str = targets[target_key]
+
+    d1, d2 = random.sample(range(3, 10), 2)
+    a = d1 * d2
+    p1 = random.randint(1, d1 - 1)
+    p2 = random.randint(1, d2 - 1)
+    b = f'{p1}/{d1}'
+    c = f'{p2}/{d2}'
+
+    question = f"{op1}전체 학생 수는 {a}명{eomi1} {op2}{s}은 전체의 {b}{eomi2} {target_s} 중에서 안경을 낀 학생은 {c}{eomi3} {target_str}"
+
+    init_n = []
+    model_logic = []
+
+    init_n.append(f"n0 = {a}")
+    init_n.append(f"n1 = {b}")
+    init_n.append(f"n2 = {c}")
+
+    model_logic.append(f"t0 = n0 * n1")
+    if target_s == s:
+        if target_key == 0:
+            model_logic.append("t1 = t0 * n2")
+            model_logic.append("answer = t0 - t1")
+        else:
+            model_logic.append(f"answer = t0 * n2")
+    else:
+        model_logic.append("t1 = n0 - t0")
+        if target_key == 0:
+            model_logic.append("t2 = t1 * n2")
+            model_logic.append("answer = t1 - t2")
+        else:
+            model_logic.append(f"answer = t1 * n2")
+
+    model_output_lst = init_n + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
