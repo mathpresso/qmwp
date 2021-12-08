@@ -145,6 +145,7 @@ def answer_formatting(code, question):
 
 def postprocessing(code, question):
     imports = []
+    remains = []
 
     # imports
     if "nth_smallest" in code:
@@ -152,7 +153,23 @@ def postprocessing(code, question):
     if "nth_largest" in code:
         imports.append(IMPORT_NTH_LARGEST)
 
-    code = NEWLINE.join(imports) + NEWLINE + code
+    # predefined function
+    for line in code.split(NEWLINE):
+        if "num_permutations(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_NUM_PERMUTATIONS
+            tmp += NEWLINE
+            indent = line.rpartition("num_permutations(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        else:
+            remains.append(line)
+    code = NEWLINE.join(imports + remains)
     # round / int
     code = answer_formatting(code, question)
 

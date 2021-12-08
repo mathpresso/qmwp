@@ -156,3 +156,69 @@ def numbers_1_1():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def numbers_1_2():
+    """
+    template: "a, b, c, d 중에서 서로 다른 숫자 x개를 뽑아 만들 수 있는 세 자리 수 중에서 가장 작은 수를 쓰시오."
+    """
+
+    options1 = [
+        "",
+        "숫자 카드 ",
+        "다음 수 ",
+        "수열 ",
+    ]
+
+    options2 = [
+        '서로 다른 숫자 ',
+        '서로 다른 수 ',
+        '숫자 ',
+        '수 ',
+        '',
+    ]
+
+    digits = {
+        1: '한',
+        2: '두',
+        3: '세',
+        4: '네',
+        5: '다섯',
+        6: '여섯',
+        7: '일곱',
+        8: '여덟',
+        9: '아홉',
+    }
+
+    conds_t = [
+        ('max', ['가장 큰 수를 구하시오.', '가장 큰 수는?', '가장 큰 수의 값은?', '가장 큰 수의 값을 구하면?', '가장 큰 수를 쓰시오.']),
+        ('min', ['가장 작은 수를 구하시오.', '가장 작은 수는?', '가장 작은 수의 값은?', '가장 작은 수의 값을 구하면?', '가장 작은 수를 쓰시오.'])
+    ]
+
+    seq_len = random.randint(3, 6)
+    count = random.randint(2, seq_len)
+    seq = random.sample(range(0, 10), seq_len)
+    lst = ', '.join([str(i) for i in seq])
+    seq_n_string = '\n'.join([f"n{idx} = {elem}" for idx, elem in enumerate(seq)])
+    l0 = "l0 = [{}]".format(lst)
+
+    digit = digits[count]
+    option1 = random.choice(options1)
+    option2 = random.choice(options2)
+    func, conds = random.choice(conds_t)
+    cond = random.choice(conds)
+
+    model_output_lst = []
+    model_output_lst.append(seq_n_string)
+    model_output_lst.append(f'n{seq_len} = {count}')
+    model_output_lst.append(f'n{seq_len + 1} = {count}')
+    model_output_lst.append(l0)
+    model_output_lst.append(f"num_permutations(l0, n{seq_len})")
+    model_output_lst.append(f"answer = {func}(result)")
+
+    question = f"{option1}{lst} 중에서 {option2}{count}개를 뽑아 만들 수 있는 {digit} 자리 수 중에서 {cond}"
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
