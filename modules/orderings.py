@@ -130,6 +130,34 @@ def _ordering():
                             n_index=n_index, seq_n_string=seq_n_string, eomi=eomi)
     results.append((question, model_output))
 
+    # 2-1 유형
+    # 학교에서 subject_seq의 순서로 시험을 봤습니다. x번째로 시험을 본 과목을 무엇입니까?
+    # l0 = [국어, 수학, 영어, 과학, 사회]; answer = l0[n0 - 1]
+    t_2_1 = [
+        ('학교에서 {subject_seq_q}의 순서로 시험을 봤습니다. {subject_i} 번째로 시험을 본 과목은 무엇{eomi}',
+         'n0 = {subject_i}\nl0 = [{subject_seq}]\nanswer = l0[n0 - 1]')
+    ]
+    front = random.randint(1, 100)
+    back = front + random.randint(1, 100)
+    rank = random.randint(1, back - front + 1)
+
+    subject_count = random.randint(3, len(SUBJECTS))
+    subjects = random.sample(SUBJECTS, subject_count)
+    subject_seq_q = ', '.join(subjects)
+    subject_seq = ', '.join([f"'{x}'" for x in subjects])
+    subject_i = random.randint(1, len(subjects))
+
+    eomi = random.choice(EOMIS)
+
+    o_2_1 = random.choice(t_2_1)
+    results.append(
+        tuple(map(lambda x: x.format(
+            front=front, back=back, rank=rank,
+            subject_seq_q=subject_seq_q, subject_seq=subject_seq, subject_i=subject_i,
+            seq_str=seq_str, seq_n_string=seq_n_string, eomi=eomi,
+        ), o_2_1))
+    )
+
     return results
 
 def _postprocess_results(results):
