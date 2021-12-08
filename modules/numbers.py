@@ -4,6 +4,34 @@ from utils.common import NEWLINE, VARIABLES
 from utils.utils import get_answer, postprocessing, postfix
 
 
+"""
+numbers_1_1
+- x개의 수 a, b, c, d가 있습니다. 그 중에서 가장 큰 수와 가장 작은 수의 차는 얼마입니까?
+
+numbers_1_2
+- a, b, c, d 중에서 서로 다른 숫자 x개를 뽑아 만들 수 있는 세 자리 수 중에서 가장 작은 수를 쓰시오.
+
+numbers_1_3
+- a에서 b까지의 수가 있을 때, x보다는 크고, y보다는 작은 수는 얼마입니까?
+
+numbers_2_1
+- A를 7로 나누면 몫은 B이고 나머지는 C가 됩니다. 이 식에서 몫과 나머지가 같습니다. A 중 가장 큰 수를 구하시오
+
+numbers_2_2
+- 서로 다른 두 자연수 A, B가 있습니다. A를 a로 나누면 몫은 b이고 나머지는 B가 됩니다. 나머지 B가 가장 큰 수일 때 A를 구하시오.
+
+numbers_2_3
+- 네 자리 수 5A31를 백의 자리에서 반올림하면 5000이 됩니다. 0부터 9까지의 숫자 중 A에 쓸 수 있는 숫자는 모두 몇 개입니까?
+
+numbers_3_1
+- 두 자리 수끼리의 곱셈에서 곱하는 수의 십의 자리 숫자 a를 b로 잘못 보고 계산한 값이 c가 되었습니다.
+  바르게 계산한 값이 d일 때, 두 개의 두 자리 수 중 더 작은 수를 쓰시오.
+
+numbers_3_2
+- 어떤 수에 a를 더한 후 b를 곱하고, c를 뺀 값을 d로 나누면 e이 됩니다. 어떤 수를 구하시오.
+"""
+
+
 def numbers_1_1():
     """
     template: x개의 수 a, b, c, d가 있습니다. 그 중에서 가장 큰 수와 가장 작은 수의 차는 얼마입니까?
@@ -1032,3 +1060,36 @@ def numbers_3_2():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def numbers_generator(num_samples_to_generate: int = 10000) -> list:
+    ratio = [
+        (numbers_1_1, 10), (numbers_1_2, 15), (numbers_1_3, 10),
+        (numbers_2_1, 15), (numbers_2_2, 10), (numbers_2_3, 15),
+        (numbers_3_1, 10), (numbers_3_2, 15),
+    ]
+    targets = []
+    for func, count in ratio:
+        targets.extend([func] * count)
+
+    MAX_RETRIES = 10
+    results = []
+    while num_samples_to_generate > 0:
+        tmps = []
+        for func in targets:
+            for attempt in range(MAX_RETRIES):
+                try:
+                    ret = func()
+                    tmps.append(ret)
+                # fail so retry
+                except:
+                    pass
+                # success
+                else:
+                    break
+            # all retries failed
+            else:
+                print(f"All retries failed. check template '{func.__name__}'")
+        num_samples_to_generate -= len(tmps)
+        results.extend(tmps)
+    return results
