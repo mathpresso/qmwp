@@ -123,6 +123,16 @@ def c_1_1():
         ), o_1_1))
 
 
+def c_1_2():
+    """
+    # 1-2
+    ganada_seq x개의 상자가 있습니다. B 상자는 D 상자보다 큽니다.
+    A 상자는 D 상자보다 작습니다. B 상자는 C 상자보다 작습니다. 크기가 가장 작은 상자는 무엇입니까?
+    """
+    # TODO
+    return []
+
+
 def c_1_3():
     """
     # 1-3
@@ -149,6 +159,16 @@ def c_1_3():
             len_seq=len_seq, seq=postfix(', '.join(seq), '이(가)'), seq_list=', '.join(seq),
             num=num, n_init_str=n_init_str, compare=f"n{len(seq)+1}", eomi=eomi, simple_eomi=simple_eomi,
         ), o_1_3))
+
+
+def c_2_1():
+    """
+    # 2-1 (절대 비교)
+    X는 obj를 x개 가지고 있습니다. Y는 obj를 X보다 y개 더 많이 가지고 있고
+    Z는 Y보다 z개 더 적게 가지고 있습니다. obj를 가장 적게 가지고 있는 사람은 누구입니까?
+    """
+    # TODO
+    return []
 
 
 def c_2_2():
@@ -200,6 +220,37 @@ def c_2_2():
             len_seq_kr=len_seq_kr, seq=', '.join(seq), ABCs=' '.join(strings), n_init='\n'.join(n_init),
             ops='\n'.join(ops), eomi=eomi, simple_eomi=simple_eomi,
         ), o_2_2))
+
+
+def c_2_3():
+    """
+    # 2-3
+    X는 Y보다 무겁고 Z보다 가볍습니다. W는 Z보다 무겁습니다. x명 중 가장 가벼운 사람은 누구입니까?
+    1-2와 동치지만 박스 -> 사람 이름 & key로 group
+    """
+    # TODO
+    return []
+
+
+def c_2_4():
+    """
+    # 2-4
+    지민이는 obj를 0.7l 마셨습니다. 은지는 지민이보다 1/10l 더 적게 마셨습니다.
+    윤기는 4/5l 마셨고, 유나는 지민이보다 0.2l 더 많이 마셨습니다. obj를 가장 많이 마신 사람은 누구입니까?
+    """
+    # TODO
+    return []
+
+
+def c_2_5():
+    """
+    # 2-5
+    people_seq x명이 있습니다. A는 나이가 가장 적습니다. B는 C에게는 동생이고 D에게는 형입니다.
+    C는 y년 후에 z살이 되고, E는 올해 w살입니다. x명 중에서 나이가 k번째로 적은 사람은 누구입니까?
+    유형: 상대 init (나이가 몇 번째). 상대 비교. 절대 init. 절대 비교.
+    """
+    # TODO
+    return []
 
 
 def comparison(num_samples_to_generate: int = 1_000) -> list:
