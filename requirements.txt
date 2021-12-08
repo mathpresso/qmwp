@@ -1,0 +1,6 @@
+bidict==0.21.3
+mpmath==1.2.1
+six==1.16.0
+sympy==1.8
+tossi==0.3.1
+
