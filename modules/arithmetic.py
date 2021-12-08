@@ -485,3 +485,75 @@ def range_condition_1():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def average_1():
+    """
+    template: "A, B, C의 수학점수는 각각 x점, y점, z점입니다. 이 셋을 제외한 학급의 수학점수 평균은 a점입니다.
+               A네 학급 인원수가 b명일 때, 학급 수학 평균 점수는 몇 점입니까?"
+    """
+
+    count = random.randint(2, 5)
+    people = random.sample(PEOPLE_NAMES, count)
+    subject = random.choice(SUBJECTS)
+
+    tt = []
+    for i in range(20, 40):
+        if i % count == 0:
+            tt.append(i)
+
+    total = random.choice(tt)
+    avg = random.randint(30, 70)
+    deviation = random.randint(-3, 3)
+    diff_sum = deviation * total
+    delta = diff_sum // count
+    people_str = ', '.join(people)
+    people_str_e = pick_e(people_str)
+
+    a, b = random.sample(range(1, 10), 2)
+    if count % 2 == 0:
+        value_d = [a, -a, b, -b]
+    else:
+        value_d = [0, a, -a, b, -b]
+
+    value_d = value_d[:count]
+    value_d = [value + avg + delta for value in value_d]
+    random.shuffle(value_d)
+    seq_n_string = '\n'.join([f"n{idx} = {elem}" for idx, elem in enumerate(value_d)])
+
+    value_str = "점, ".join(str(value) for value in value_d)
+
+    eomi = random.choice(["입니다.", '일 때', "이고"])
+    op1 = random.choice([f"{subject}점수의 ", ""])
+    end = random.choice([
+        "평균 점수는 몇 점입니까?",
+        "점수의 평균을 구하시오.",
+        "점수의 평균은 얼마입니까?",
+        "점수의 평균은 몇 점입니까?",
+    ])
+
+    question = f"{people_str_e}의 {subject}점수는 각각 {value_str}점 {eomi} 이들을 제외한 {op1}평균은 {avg}점 입니다. " \
+               f"학급 인원수가 {total}명일 때 학급 {subject} {end}"
+
+    init_n = []
+    model_logic = []
+
+    init_n.append(seq_n_string)
+    init_n.append(f"n{count} = {avg}")
+    init_n.append(f"n{count + 1} = {total}")
+
+    tis = []
+    for i in range(count):
+        model_logic.append(f"t{i} = n{i} - n{count}")
+        tis.append(f"t{i}")
+
+    ti_sum = " + ".join(tis)
+    # TODO: check this. TOO LONG
+    model_logic.append(f"answer = n{count} + ({ti_sum}) / n{count + 1}")
+
+    model_output_lst = init_n + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
