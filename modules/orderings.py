@@ -64,6 +64,33 @@ def _ordering():
         ), o_1_1))
     )
 
+    # 1-2 유형
+    # 달리기 시합에서 X는 x등을 했고, Y는 y등을 했습니다. Z는 X보다 잘했지만 Y보다는 못했습니다. Z의 등수는 몇 등입니까?
+    t_1_2 = [
+        ('달리기 시합에서 {A}는 {former}등을 했고, {B}는 {latter}등을 했습니다. {C}는 {B}보다 잘했지만 {A}보다는 못했습니다. {C}의 등수는 몇 등{eomi}',
+         'n0 = {former}\nn1 = {latter}\nanswer = n0 + 1'),
+        ('달리기 시합에서 {A}는 {former}등을 했고, {B}는 {latter}등을 했습니다. {C}는 {A}보다 못했지만 {B}보다는 잘했습니다. {C}의 등수는 몇 등{eomi}',
+         'n0 = {former}\nn1 = {latter}\nanswer = n0 + 1'),
+    ]
+    A, B, C = list(map(pick_e, random.sample(PEOPLE_NAMES, 3)))
+    former = random.randint(1, 100)
+    latter = former + 2
+    total = random.randint(3, 100)
+    total_1 = total - 1
+    front = random.randint(1, total_1 - 1)
+    
+    test_type = '달리기'
+
+    eomi = random.choice(EOMIS)
+
+    o_1_2 = random.choice(t_1_2)
+    results.append(
+        tuple(map(lambda x: x.format(A=A, B=B, C=C, former=former, 
+            latter=latter, total=total, total_1=total_1, front=front, test_type=test_type, A_rank=former, B_rank=total,
+            eomi=eomi,
+        ), o_1_2))
+    )
+
     return results
 
 def _postprocess_results(results):
