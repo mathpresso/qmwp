@@ -2,6 +2,15 @@
 IMPORT_MATH = "import math"
 
 
+# local functions
+IMPORT_NUM_PERMUTATIONS = "from utils.combinatorics import num_permutations"
+
+
+# lambda functions
+IMPORT_NTH_SMALLEST = "nth_smallest = lambda l, i: sorted(l)[i-1]"
+IMPORT_NTH_LARGEST = "nth_largest = lambda l, i: sorted(l, reverse=True)[i-1]"
+
+
 # answer generation
 ANSWER_ROUND_ZERO = "if answer - math.floor(answer) < 0.5:\n"\
                     "\tanswer = math.floor(answer)\n"\
