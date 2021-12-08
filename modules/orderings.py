@@ -91,6 +91,45 @@ def _ordering():
         ), o_1_2))
     )
 
+    # 1-3 유형
+    # 키가 작은 사람부터 순서대로 x명이 한 줄로 서 있습니다. X가 앞에서부터 y_kr 번째에 서 있습니다.
+    # 키가 큰 사람부터 순서대로 다시 줄을 서면 X는 앞에서부터 몇 번째에 서게 됩니까?
+    # reversed = 전체 - (본인 - 1)
+    t_1_3_1 = [
+        (['키가 작은 사람부터 순서대로 {total}명이 한 줄로 서 있습니다. {A}가 앞에서부터 {rank} 번째에 서 있습니다. '
+         '키가 큰 사람부터 순서대로 다시 줄을 서면 {A}는 앞에서부터 몇 번째에 서게 됩니까?'],
+         'n0 = {total}\nn1 = {rank}\nt0 = n0 - n1\nanswer = t0 + 1'),
+    ]
+
+    seq_len = random.randint(3, 9)
+    rank = random.randint(1, seq_len)
+    A = pick_e(random.choice(PEOPLE_NAMES))
+    seq = random.sample(range(100), seq_len)
+    seq_str = ', '.join([str(i) for i in seq])
+    seq_josa = postfix(seq_str, '을(를)')
+    eomi = random.choice(['에 쓰인 수를 ', '의 값을 ', '에 적힌 숫자를 ', '에 쓰인 값을 '])\
+        + random.choice(SIMPLE_EOMIS)
+
+    t_1_3_all = [t_1_3_1]
+    t_1_3 = random.choice(t_1_3_all)
+    if t_1_3 == t_1_3_1:
+        n_index = 1
+        seq_n_string = '\n'.join([f"n{idx + n_index} = {elem}" for idx, elem in enumerate(seq)])
+        n_index = 0
+    else:
+        n_index = 0
+        seq_n_string = '\n'.join([f"n{idx + n_index} = {elem}" for idx, elem in enumerate(seq)])
+        n_index = len(seq)
+
+    o_1_3 = random.choice(t_1_3)
+    q_1_3 = random.choice(o_1_3[0])
+    s_1_3 = o_1_3[1]
+    question = q_1_3.format(A=A, total=total, rank=rank, seq=seq, seq_str=seq_str, seq_josa=seq_josa,
+                            n_index=n_index, seq_n_string=seq_n_string, eomi=eomi)
+    model_output = s_1_3.format(A=A, total=total, rank=rank, seq=seq, seq_str=seq_str, seq_josa=seq_josa,
+                            n_index=n_index, seq_n_string=seq_n_string, eomi=eomi)
+    results.append((question, model_output))
+
     return results
 
 def _postprocess_results(results):
