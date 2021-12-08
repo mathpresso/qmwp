@@ -190,3 +190,64 @@ def simple_arithmetic_1():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def simple_arithmetic_1_1():
+    """
+    template: "subject 책 x권 중에서 y권을 읽었는데 subject 책 z권을 선물 받았습니다. 읽지 않은 subject 책은 몇 권입니까?"
+    """
+
+    all_str = random.choice(["모두 ", "전부 ", ""])
+    obj = random.choice(["동화책", "책", "만화책", "소설책", "수학책"])
+    obj_option = random.choice([f"{obj} ", ""])
+    p1, p2 = random.sample(PEOPLE_NAMES, 2)
+    p1_e = pick_e(p1)
+    p2_e = pick_e(p2)
+    p1_str = random.choice([
+        f"{p1_e}가 ", ""
+    ])
+    p2_str = random.choice([
+        f"{p2_e}에게 ", ""
+    ])
+    a = random.randint(1, 100)
+    b = random.randint(1, 100)
+    c = a + b + random.randint(0, 100)
+    target, key1 = random.choice([
+        (f" 읽지 않은 {obj}은 {all_str}몇 권입니까?", 0),
+        (f" 읽은 {obj}은 {all_str}몇 권입니까?", 1),
+    ])
+
+    question, key2 = random.choice([
+        (f"{p1_str}{obj} {c}권 중에서 {a}권을 읽고 {obj_option}{b}권을 더 읽었습니다.", 0),
+        (f"{p1_str}{obj} {c}권 중에서 {a}권을 읽었는데 {p2_str}{obj_option}{b}권을 선물 받았습니다.", 1),
+        (f"{p1_str}{obj} {c}권 중에서 {a}권을 읽었는데 {obj_option}{b}권을 더 샀습니다.", 1),
+    ])
+
+    init_n = []
+    model_logic = []
+
+    question += target
+
+    init_n.append(f"n0 = {c}")
+    init_n.append(f"n1 = {a}")
+    init_n.append(f"n2 = {b}")
+
+    if key2 == 0:
+        if key1 == 0:
+            model_logic.append(f"t0 = n1 + n2")
+            model_logic.append(f"answer = n0 - t0")
+        else:
+            model_logic.append(f"answer = n1 + n2")
+    else:
+        if key1 == 0:
+            model_logic.append(f"t0 = n0 - n1")
+            model_logic.append(f"answer = t0 + n2")
+        else:
+            model_logic.append(f"answer = n1")
+
+    model_output_lst = init_n + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
