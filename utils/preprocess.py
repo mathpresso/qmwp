@@ -42,6 +42,7 @@ TIME_UNITS = [
 TIME_UNITS2 = [
     ('일', ['주일', '주'], 7)
 ]
+FIGURE_UNITS = ['각형', '각뿔', '각기둥', '면체']
 
 
 def preprocess_number(q: str) -> str:
@@ -61,11 +62,22 @@ def preprocess_time(q):
     return q[1:]
 
 
+def preprocess_figure(q: str) -> str:
+    for unit in FIGURE_UNITS:
+        for kor, num in KOREAN_NUMS_REVERSE[1:]:
+            kor = kor.strip()
+            num = num.strip()
+            q = q.replace(f"{kor}{unit}", f"{num}{unit}")
+    return q
+
+
 def preprocess(question: str) -> str:
     question = preprocess_number(question)
     question = preprocess_time(question)
+    question = preprocess_figure(question)
     return question
 
 
 assert preprocess_number('100,000,000/2,203,133') == '100000000/2203133'
 assert preprocess_time('일주일 전에') == '7일 전에'
+assert preprocess_figure("정삼각형의 둘레의 길이는?") == "정3각형의 둘레의 길이는?"
