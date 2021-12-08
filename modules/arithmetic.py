@@ -367,6 +367,100 @@ def equation_2():
     return question, model_output, code, answer
 
 
+def equation_3():
+    """
+    template: "obj1과 obj2이 모두 합해서 x개 있습니다. obj1이 obj2보다 y개 더 적다면 obj1은 몇 개 있습니까?"
+    """
+
+    obj1, obj2 = random.sample(OBJECTS, 2)
+    obj1_w = postfix(obj1, '와')
+    obj2_e = postfix(obj2, '이')
+    p = random.choice(PEOPLE_NAMES)
+    container = random.choice(CONTAINERS)
+    p_e = pick_e(p)
+
+    option1 = random.choice([
+        "",
+        f"{p_e}네 집에 ",
+        f"{container}에 ",
+    ])
+
+    t1, t2 = random.sample([obj1, obj2], 2)
+    t1_e = postfix(t1, '이')
+    target = random.choice([obj1, obj2])
+    target_n = postfix(target, '은')
+    eomi = random.choice([
+        "있습니다.", "있을 때", "있고"
+    ])
+    all_str = random.choice(["모두 ", "전부 ", ""])
+
+    c = random.randint(10, 100)
+    d = random.randint(10, 100)
+
+    flag = False
+    if c == d:
+        flag = True
+
+    op_gt = random.choice([
+        "많을 때", "많다면", "많습니다."
+    ])
+    op_lt = random.choice([
+        "적을 때", "적다면", "적습니다."
+    ])
+    op_eq = random.choice([
+        "같을 때", "같다면", "같습니다."
+    ])
+
+    a = c + d
+    b = c - d
+    # obj1 > obj2
+    if b > 0:
+        if t1 == obj1:
+            op_str = op_gt
+        else:
+            op_str = op_lt
+        if target == obj1:
+            op = '+'
+        else:
+            op = '-'
+    # obj1 < obj2
+    else:
+        if t1 == obj1:
+            op_str = op_lt
+        else:
+            op_str = op_gt
+        if target == obj1:
+            op = '-'
+        else:
+            op = '+'
+    b = abs(b)
+
+    question = f"{option1}{obj1_w} {obj2_e} {all_str}합해서 {a}개 {eomi} {t1_e} {t2}보다 {b}개 더 {op_str} {target_n} 몇 개 있습니까?"
+    if flag:
+        op_str = op_eq
+        question = f"{option1}{obj1_w} {obj2_e} {all_str}합해서 {a}개 {eomi} {obj1_w} {obj2}의 수가 {op_str} {target_n} 몇 개 있습니까?"
+
+    init_n = []
+    model_logic = []
+
+    init_n.append(f"n0 = {a}")
+    if not flag:
+        init_n.append(f"n1 = {b}")
+
+    if not flag:
+        model_logic.append(f"t0 = n0 {op} n1")
+        model_logic.append(f"answer = t0 // 2")
+    else:
+        model_logic.append(f"answer = n0 // 2")
+
+    model_output_lst = init_n + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
+
+
 def range_condition_1():
     """
     template: "a부터 b까지의 홀수의 합을 구하시오."
