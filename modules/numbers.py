@@ -819,3 +819,113 @@ def numbers_2_3():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def numbers_3_1():
+    """
+    template: "두 자리 수끼리의 곱셈에서 곱하는 수의 십의 자리 숫자 a를 b로 잘못 보고 계산한 값이 c가 되었습니다. " \
+              "바르게 계산한 값이 d일 때, 두 개의 두 자리 수 중 더 작은 수를 쓰시오."
+    """
+
+    init_n = []
+    init_x = []
+    model_logic = []
+
+    option1, option1_init = random.choice([
+        ("두 자리 수끼리의", 1),
+        ("두 자리 수들의", 1),
+        ("두 개의 두 자리 수끼리의", 2),
+    ])
+    option1_init = 1
+
+    categories = [('*', '곱셈에서', ['곱하는 수의 ', ''], '/')]
+
+    op, op_str, op_options, op_inv = random.choice(categories)
+    op_option_str = random.choice(op_options)
+
+    key = random.randint(0, 1)
+    mis_template = [(1, '일'), (10, '십')]
+    mis_init, mis_str = mis_template[key]
+
+    n1 = random.randint(10, 99)
+    n2 = random.randint(10, 99)
+    if key == 0:
+        n1_str = str(n1)
+        m1 = n1_str[1]
+        m2 = random.choice([c for c in '0123456789' if c != m1])
+        n1_new = int(n1_str[0] + m2)
+        v1 = n1_new * n2
+        v2 = n1 * n2
+    elif key == 1:
+        n1_str = str(n1)
+        m1 = n1_str[0]
+        m2 = random.choice([c for c in '123456789' if c != m1])
+        n1_new = int(m2 + n1_str[1])
+        v1 = n1_new * n2
+        v2 = n1 * n2
+    m1_l = postfix(m1, '을')
+    m2_r = postfix(m2, '로')
+    v1_str = '{} 되었습니다.'.format(postfix(str(v1), '이'))
+    t1 = random.choice([
+        "바르게 계산한 값이",
+        "바르게 계산하면",
+        "올바른 계산 결과는",
+        "올바른 계산은",
+        "올바른 계산 결과 값은",
+    ])
+    v2_str = f'{v2}일 때,'
+
+    # ~ 개 -> init X
+    option2, option2_init = random.choice([
+        ("두 개의 두 자리 수 가운데", 2),
+        ("두 개의 수 중", 1),
+        ("두 개의 수 가운데", 1),
+    ])
+    option2_init -= 1
+
+
+    option3 = random.choice(['더 ', ''])
+    cond_f, cond_strs = random.choice([
+        ('max', ['큰 수를 구하시오.', '큰 수는?', '큰 수의 값은?', '큰 수의 값을 구하면?', '큰 수를 쓰시오.', '큰 수는 얼마입니까?']),
+        ('min', ['작은 수를 구하시오.', '작은 수는?', '작은 수의 값은?', '작은 수의 값을 구하면?', '작은 수를 쓰시오.', '작은 수는 얼마입니까?'])
+    ])
+    cond_str = random.choice(cond_strs)
+
+    question = f"{option1} {op_str} {op_option_str}{mis_str}의 자리 숫자 {m1_l} {m2_r} 잘못 보고 계산한 값이 " \
+               f"{v1_str} {t1} {v2_str} {option2} {option3}{cond_str}"
+
+    # init_n
+    n_index = 0
+    for i in range(option1_init):
+        init_n.append(f'n{n_index} = 2')
+        n_index += 1
+    mis_index = n_index
+    init_n.append(f'n{n_index} = {mis_init}')  # 일의 자리, 십의 자리
+    n_index += 1
+    m1_index = n_index
+    m2_index = n_index + 1
+    v1_index = n_index + 2
+    v2_index = n_index + 3
+    init_n.append(f'n{m1_index} = {m1}')
+    init_n.append(f'n{m2_index} = {m2}')
+    init_n.append(f'n{v1_index} = {v1}')
+    init_n.append(f'n{v2_index} = {v2}')
+    n_index += 4
+    for i in range(option2_init):
+        init_n.append(f'n{n_index} = 2')
+        n_index += 1
+
+    # model_logic
+    model_logic.append(f"t0 = n{v1_index} - n{v2_index}")
+    model_logic.append(f"t1 = n{m2_index} - n{m1_index}")
+    model_logic.append(f"t2 = t1 * n{mis_index}")
+    model_logic.append(f"t3 = t0 / t2")
+    model_logic.append(f"t4 = n{v2_index} / t3")
+    model_logic.append(f"answer = {cond_f}([t3, t4])")
+
+    model_output_lst = init_n + init_x + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
