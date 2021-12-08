@@ -184,6 +184,30 @@ def _ordering():
         ), o_2_3))
     )
 
+    # 2-4
+    # X는 왼쪽에서 x번째 열, 오른쪽에서 y번째 열, 앞에서 z번째 줄, 뒤에서 w번째 줄에 서서 action를 하고 있습니다.
+    # 각 줄마다 서 있는 학생의 수가 같다고 할 때, action를 하고 있는 학생은 모두 몇 명입니까?
+    t_2_4 = [
+        ('{A}는 왼쪽에서 {left}번째 열, 오른쪽에서 {right}번째 열, 앞에서 {front}번째 줄, 뒤에서 {back}번째 줄에 서서 체조를 하고 있습니다. '
+         '각 줄마다 서 있는 학생의 수가 같다고 할 때, 체조를 하고 있는 학생은 모두 몇 명{eomi}',
+         'n0 = {left}\nn1 = {right}\nn2 = {front}\nn3 = {back}\nt0 = n0 + n1\n'
+         't1 = t0 - 1\nt2 = n2 + n3\nt3 = t2 - 1\nanswer = t1 * t3'),
+    ]
+    A = pick_e(random.choice(PEOPLE_NAMES))
+    front = random.randint(1, 20)
+    back = random.randint(1, 20)
+    left = random.randint(1, 20)
+    right = random.randint(1, 20)
+
+    eomi = random.choice(EOMIS)
+
+    o_2_4 = random.choice(t_2_4)
+    results.append(
+        tuple(map(lambda x: x.format(
+            A=A, front=front, back=back, left=left, right=right, eomi=eomi,
+        ), o_2_4))
+    )
+
     return results
 
 def _postprocess_results(results):
