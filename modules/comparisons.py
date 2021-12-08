@@ -37,7 +37,7 @@ def _comparison():
     X는 obj를 x개 가지고 있습니다. Y는 obj를 X보다 y개 더 많이 가지고 있고
     Z는 Y보다 z개 더 적게 가지고 있습니다. obj를 가장 적게 가지고 있는 사람은 누구입니까?
 
-    2-2 (절대 비교)
+    2-2 (절대 비교) [v]
     x_kr 수 A, B, C, D가 있습니다. A는 a입니다. B는 A보다 b 큰 수입니다.
     C는 B보다 c 작은 수입니다. D는 C의 d배인 수입니다. 가장 큰 수는 어느 것입니까?
 
@@ -56,7 +56,7 @@ def _comparison():
         list: [description]
     """
     results = []
-    for i in (c_1_1, c_1_3,):
+    for i in (c_1_1, c_1_3, c_2_2):
         while True:
             try:
                 question, model_output = i()
