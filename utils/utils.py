@@ -10,7 +10,7 @@ from .common import ALPHABETS_FOR_PARTICLE, NEWLINE, SPACE4
 from .predefined_func import *
 
 
-def _generate_number(scale=2, starts_from=0) -> str:
+def generate_number(scale=2, starts_from=0) -> str:
     """generates random number string (integer or fraction or decimal)
 
     Args:
