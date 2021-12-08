@@ -929,3 +929,106 @@ def numbers_3_1():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def numbers_3_2():
+    """
+    template: "어떤 수에 a를 더한 후 b를 곱하고, c를 뺀 값을 d로 나누면 e이 됩니다. 어떤 수를 구하시오."
+    """
+
+    init_n = []
+    init_x = []
+    model_logic = []
+
+    categories = [('+', ['더하고', '더한 후', '더한 후에', '더하고 나서', '더한 결과에', '더한 값에'],
+                   ['더하고', '더한 후에', '더하고 나서', '더한 결과를', '더한 값을'],
+                   ['더하면', '더한 결과는', '더한 값은'], '-'),
+                  ('-', ['빼고', '뺀 후에', '뺀 후', '뺀 결과에', '뺀 값에'],
+                   ['빼고', '뺀 후에', '뺀 결과를', '뺀 값을'],
+                   ['빼면', '뺀 결과는', '뺀 값은'], '+'),
+                  ('*', ['곱하고', '곱한 후', '곱하고 나서', '곱한 후에', '곱한 결과에', '곱한 값에'],
+                   ['곱하고', '곱하고 나서', '곱한 후에', '곱한 결과를', '곱한 값을'],
+                   ['곱하면', '곱한 결과는', '곱한 값은'], '/'),
+                  ('/', ['나눈 후', '나누고', '나누고 나서', '나눈 후에', '나눈 결과에', '나눈 값에'],
+                   ['나누고', '나눈 후에', '나눈 결과를', '나눈 값을'],
+                   ['나누면', '나눈 결과는', '나는 값은'], '*'),
+    ]
+
+    eos = random.choice([
+        '어떤 수를 구하시오.',
+        '어떤 수는?',
+        '어떤 수의 값은?',
+        '어떤 수의 값을 구하시오.',
+        '어떤 수는 얼마인가?',
+    ])
+
+    op_count = random.randint(2, 6)
+    op_lst = [random.choice(categories) for _ in range(op_count)]
+    MIN = 1
+    MAX = 300
+    n_lst = [random.randint(MIN, MAX) for _ in range(op_count)]
+    n_result = random.randint(100, 10000)
+    josa_lst = []
+
+    for op_tuple in op_lst:
+        if op_tuple[0] == '/':
+            josa_lst.append(2)
+        else:
+            josa_lst.append(1)
+    josa_lst.append(3)
+
+    if josa_lst[0] == 2:
+        question = '어떤 수를 '
+    else:
+        question = '어떤 수에 '
+
+    question_lst = []
+    for i, op_tuple in enumerate(op_lst):
+        op = op_tuple[0]
+        josa = random.choice(op_tuple[josa_lst[i + 1]])
+        n = n_lst[i]
+        if op == '/':
+            n_str = postfix(str(n), '로')
+        else:
+            n_str = postfix(str(n), '를')
+        question_lst.append(f'{n_str} {josa}')
+
+    n_result_str = random.choice([
+        '{} 됩니다.'.format(postfix(str(n_result), '이')),
+        '{}일 때,'.format(n_result),
+        '{}입니다.'.format(n_result),
+    ])
+
+    question_lst.append(n_result_str)
+    question_lst.append(eos)
+    question += ' '.join(question_lst)
+
+    # init_n
+    for i, n in enumerate(n_lst):
+        init_n.append(f'n{i} = {n}')
+    length = len(n_lst)
+    init_n.append(f'n{length} = {n_result}')
+
+    # init_x
+    init_x.append("x0 = 'A'")
+
+    # model_logic
+    # TODO: this should be solution 2
+    t_index = 0
+    for i, op_tuple in enumerate(op_lst[::-1]):
+        op = op_tuple[4] # 역함수
+        if i == 0:
+            model_logic.append(f't{t_index} = n{length} {op} n{length-1-i}')
+        elif i == length - 1:
+            model_logic.append(f'answer = t{t_index} {op} n0')
+        else:
+            model_logic.append(f't{t_index+1} = t{t_index} {op} n{length-1-i}')
+            t_index += 1
+
+    # TODO: consider init_x (어떤 수)
+    model_output_lst = init_n + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
