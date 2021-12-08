@@ -736,3 +736,46 @@ def ratio_1():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def arithmetic_generator(num_samples_to_generate: int = 10000) -> list:
+    ratio = [
+        # simple arithmetic 1 (add, sub)
+        (simple_arithmetic_1, 20), (simple_arithmetic_1_1, 10),
+        # simple arithmetic 2 (mul)
+        (simple_arithmetic_2_1, 6),
+        # equation
+        (equation_1, 10), (equation_2, 10), (equation_3, 10),
+        # range condition
+        (range_condition_1, 25),
+        # average
+        (average_1, 20),
+        # ratio
+        (ratio_1, 20),
+    ]
+    targets = []
+    for func, count in ratio:
+        targets.extend([func] * count)
+
+    MAX_RETRIES = 10
+
+    results = []
+    while num_samples_to_generate > 0:
+        tmps = []
+        for func in targets:
+            for attempt in range(MAX_RETRIES):
+                try:
+                    ret = func()
+                    tmps.append(ret)
+                # fail so retry
+                except:
+                    pass
+                # success
+                else:
+                    break
+            # all retries failed
+            else:
+                print(f"All retries failed. check template '{func.__name__}'")
+        num_samples_to_generate -= len(tmps)
+        results.extend(tmps)
+    return results
