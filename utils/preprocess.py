@@ -91,11 +91,11 @@ DIGIT_UNITS = ['의 자리',  '의자리']
 DIGIT_UNIT_TARGET = '의 자리'
 
 
-def preprocess_number(q: str) -> str:
+def _preprocess_number(q: str) -> str:
     return re.sub(r'(\d),(\d)', r'\1\2', q)
 
 
-def preprocess_time(q):
+def _preprocess_time(q: str) -> str:
     q = ' ' + q
     for num_kor, num in KOREAN_NUMS_REVERSE:
         for to, froms, value in TIME_UNITS2:
@@ -108,7 +108,7 @@ def preprocess_time(q):
     return q[1:]
 
 
-def preprocess_figure(q: str) -> str:
+def _preprocess_figure(q: str) -> str:
     for unit in FIGURE_UNITS:
         for kor, num in KOREAN_NUMS_REVERSE[1:]:
             kor = kor.strip()
@@ -117,7 +117,7 @@ def preprocess_figure(q: str) -> str:
     return q
 
 
-def preprocess_question(q: str) -> str:
+def _preprocess_question(q: str) -> str:
     # INDEX and DIGITS
     q = ' ' + q
     reverse_convert = True
@@ -156,15 +156,15 @@ def preprocess_question(q: str) -> str:
 
 
 def preprocess(question: str) -> str:
-    question = preprocess_number(question)
-    question = preprocess_time(question)
-    question = preprocess_figure(question)
-    question = preprocess_question(question)
+    question = _preprocess_number(question)
+    question = _preprocess_time(question)
+    question = _preprocess_figure(question)
+    question = _preprocess_question(question)
     return question
 
 
-assert preprocess_number('100,000,000/2,203,133') == '100000000/2203133'
-assert preprocess_time('일주일 전에') == '7일 전에'
-assert preprocess_figure("정삼각형의 둘레의 길이는?") == "정3각형의 둘레의 길이는?"
-assert preprocess_question("어떤 세 자리 수를 다섯 번 더했더니 10이 되었다. 어떤 수를 구하시오.") == \
+assert _preprocess_number('100,000,000/2,203,133') == '100000000/2203133'
+assert _preprocess_time('일주일 전에') == '7일 전에'
+assert _preprocess_figure("정삼각형의 둘레의 길이는?") == "정3각형의 둘레의 길이는?"
+assert _preprocess_question("어떤 세 자리 수를 다섯 번 더했더니 10이 되었다. 어떤 수를 구하시오.") == \
     '어떤 3 자리 수를 5 번 더했더니 10이 되었다. 어떤 수를 구하시오.'
