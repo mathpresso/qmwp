@@ -35,6 +35,35 @@ def _ordering():
         answer: int? str?
     """
     results = []
+
+    # 1-1 유형
+    # x명의 학생들이 한 줄로 줄을 섰습니다. X의 앞에 y명의 학생들이 서 있습니다. X의 뒤에 서 있는 학생은 몇 명입니까?
+    # 전체 - (앞/뒤 + 1)
+    t_1_1 = [
+        ('{total}명의 학생들이 한 줄로 줄을 섰습니다. {A}의 앞에 {front}명의 학생들이 서 있습니다. {A}의 앞에 서 있는 학생은 몇 명{eomi}',
+         'n0 = {total}\nn1 = {front}\nanswer = n1'),
+        ('{total}명의 학생들이 한 줄로 줄을 섰습니다. {A}의 뒤에 {back}명의 학생들이 서 있습니다. {A}의 뒤에 서 있는 학생은 몇 명{eomi}',
+         'n0 = {total}\nn1 = {back}\nanswer = n1'),
+    ]
+
+    total = random.randint(2, 100)
+    front = random.randint(0, total-1)
+    back = random.randint(0, total-1)
+    rank = random.randint(0, total-1)
+    back_rank = random.randint(0, total-1)
+
+    A = pick_e(random.choice(PEOPLE_NAMES))
+    animal = random.choice(ANIMAL_NAMES)
+
+    eomi = random.choice(EOMIS)
+
+    o_1_1 = random.choice(t_1_1)
+    results.append(
+        tuple(map(lambda x: x.format(total=total, front=front, back=back, rank=rank, 
+            back_rank=back_rank, A=A, animal=animal, animal_josa=postfix(animal, '은'), eomi=eomi,
+        ), o_1_1))
+    )
+
     return results
 
 def _postprocess_results(results):
