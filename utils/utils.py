@@ -148,19 +148,122 @@ def postprocessing(code, question):
     remains = []
 
     # imports
+    # numbers
     if "nth_smallest" in code:
         imports.append(IMPORT_NTH_SMALLEST)
     if "nth_largest" in code:
         imports.append(IMPORT_NTH_LARGEST)
+    # combinations
+    if "combinations" in code:
+        imports.append(IMPORT_COMBINATIONS)
+    if "math." in code:
+        imports.append(IMPORT_MATH)
 
     # predefined function
     for line in code.split(NEWLINE):
+        # combinations
         if "num_permutations(" in line:
             tmp = NEWLINE.join(imports + remains)
             tmp += NEWLINE
             tmp += IMPORT_NUM_PERMUTATIONS
             tmp += NEWLINE
             indent = line.rpartition("num_permutations(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "count_digit(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_COUNT_DIGIT
+            tmp += NEWLINE
+            indent = line.rpartition("count_digit(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "filter_sum(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_FILTER_SUM
+            tmp += NEWLINE
+            indent = line.rpartition("filter_sum(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "num_permutations_partition_sub(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_NUM_PERMUTATIONS_PARTITION_SUB
+            tmp += NEWLINE
+            indent = line.rpartition("num_permutations_partition_sub(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "num_mul_permutations(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_NUM_MUL_PERMUTATIONS
+            tmp += NEWLINE
+            indent = line.rpartition("num_mul_permutations(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "num_permutations_filter_add(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_NUM_PERMUTATIONS_FILTER_ADD
+            tmp += NEWLINE
+            indent = line.rpartition("num_permutations_filter_add(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "C(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_C
+            tmp += NEWLINE
+            indent = line.rpartition("C(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "dice_add_eq(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_DICE_ADD_EQ
+            tmp += NEWLINE
+            indent = line.rpartition("dice_add_eq(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "count_coin(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_COUNT_COIN
+            tmp += NEWLINE
+            indent = line.rpartition("count_coin(")[0]
             tmp += indent
             tmp += f"processed = {line}\n"
             tmp += indent
