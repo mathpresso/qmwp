@@ -108,6 +108,50 @@ def rectangle_circumference():
     return results
 
 
+def polygon_num_of_side():
+    """n각형의 변의 개수
+
+    Returns:
+        List
+    """
+    results = []
+    t_2_1 = [
+        (
+            '{n}각형의 변의 개수와 {m}각형의 변의 개수의 합을 {simple_q_eomi}',
+            'n0 = {n}\nn1 = {m}\nanswer = n0 + n1'
+        ),
+        (
+            '{n}각형의 변의 개수와 {m}각형의 변의 개수의 합은 무엇{q_eomi}',
+            'n0 = {n}\nn1 = {m}\nanswer = n0 + n1'
+        ),
+        (
+            '{n}각형의 변의 개수를 {simple_q_eomi}',
+            'n0 = {n}\nanswer = n0'
+        ),
+        (
+            '{n}각형의 변의 개수는 무엇{q_eomi}',
+            'n0 = {n}\nanswer = n0'
+        ),
+        (
+            '{n}각형은 변을 몇 개 갖습니까?',
+            'n0 = {n}\nanswer = n0'
+        ),
+    ]
+    n = randint(3, 20)
+    m = randint(3, 20)
+
+    simple_q_eomi = choice(SIMPLE_Q_EOMIS)
+    q_eomi = choice(Q_EOMIS)
+
+    o_2_1 = choice(t_2_1)
+    results.append(
+        tuple(map(lambda x: x.format(
+            n=n, m=m, simple_q_eomi=simple_q_eomi, q_eomi=q_eomi,
+        ), o_2_1))
+    )
+    return results
+
+
 def _figure() -> list:
     """
     # 도형 서술 유형
@@ -120,7 +164,7 @@ def _figure() -> list:
     - 한 변의 길이가 acm인 정3각형의 둘레는 몇 cm입니까?
     """
     results = []
-    for i in [rectangle_circumference]:
+    for i in [rectangle_circumference, polygon_num_of_side]:
         for question, model_output in i():
             try:
                 code = postprocessing(model_output, question)
