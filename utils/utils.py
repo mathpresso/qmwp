@@ -144,6 +144,15 @@ def answer_formatting(code, question):
 
 
 def postprocessing(code, question):
+    imports = []
+
+    # imports
+    if "nth_smallest" in code:
+        imports.append(IMPORT_NTH_SMALLEST)
+    if "nth_largest" in code:
+        imports.append(IMPORT_NTH_LARGEST)
+
+    code = NEWLINE.join(imports) + NEWLINE + code
     # round / int
     code = answer_formatting(code, question)
 
