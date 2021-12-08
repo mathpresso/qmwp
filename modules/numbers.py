@@ -696,3 +696,126 @@ def numbers_2_2(solution_id=1):
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def numbers_2_3():
+    """
+    template: "네 자리 수 5A31를 백의 자리에서 반올림하면 5000이 됩니다. 0부터 9까지의 숫자 중 A에 쓸 수 있는 숫자는 모두 몇 개입니까?"
+    """
+
+    digits = {
+        1: '한',
+        2: '두',
+        3: '세',
+        4: '네',
+        5: '다섯',
+        6: '여섯',
+        7: '일곱',
+        8: '여덟',
+        9: '아홉',
+    }
+
+    round_digits = {
+        1: '일',
+        2: '십',
+        3: '백',
+        4: '천',
+        5: '만',
+        6: '십만',
+        7: '백만',
+        8: '천만',
+        9: '억',
+    }
+
+    target = random.choice([
+        "쓸 수 있는 숫자는 모두 몇 개입니까?",
+        "들어갈 수 있는 수는 몇 개 있습니까?",
+        "넣을 수 있는 수는 모두 몇 개입니까?",
+        "들어갈 수 있는 수의 개수는?",
+        "들어갈 수 있는 수의 개수를 구하시오.",
+    ])
+
+    eomi1 = random.choice([
+        "이 됩니다.",
+        "입니다.",
+        "이 될 때,",
+        "일 때,",
+    ])
+
+    op = random.choice(["올림", "버림", "반올림"])
+    digit = random.randint(2, 9)
+    digit_str = digits[digit]
+    tmp_value = random.randint(10 ** (digit - 1), 10 ** digit)
+    round_digit = random.randint(1, digit)
+    round_digit_value = 10 ** (round_digit - 1)
+    tmp_value_str = str(tmp_value)
+    banolim_key = random.randint(0, 1)
+    if op == "버림" or (op == "반올림" and banolim_key == 0):
+        if round_digit == digit:
+            target_value_str = '0'
+        else:
+            target_value_str = tmp_value_str[:digit - round_digit] + '0' * round_digit
+    elif op == "올림" or (op == "반올림" and banolim_key == 1):
+        if round_digit == digit:
+            target_value_str = '1' + '0' * round_digit
+        else:
+            c = int(tmp_value_str[digit - round_digit - 1])
+            target_value = int(tmp_value_str[:digit - round_digit - 1] + '0' * (round_digit + 1)) + int(
+                str(c + 1) + '0' * round_digit)
+            target_value_str = str(target_value)
+    x = random.choice(VARIABLES)
+    value_str = tmp_value_str[:digit - round_digit] + x + tmp_value_str[digit - round_digit + 1:]
+    value_str_eomi = postfix(value_str, '을(를)')
+    round_str = round_digits[round_digit]
+
+    option1 = random.choice([
+        f"{digit_str} 자리 수 ",
+        "",
+    ])
+
+    st, ed = sorted(random.sample(range(0, 10), 2))
+    question = f"{option1}{value_str_eomi} {round_str}의 자리에서 {op}하면 {target_value_str}{eomi1} {st}부터 {ed}까지의 숫자 중 {x}에 {target}"
+
+    # TODO: 일, 십, 백의 자리 -> 초기화 해야 하는가?
+    # TODO: 6A42 는 초기화 해야 하는가 ?
+
+    init_n = []
+    n_index = 0
+    if option1:
+        init_n.append(f"n{n_index} = {digit}")
+        n_index += 1
+    init_n.append(f"n{n_index} = {round_digit_value}")
+    init_n.append(f"n{n_index+1} = {target_value_str}")
+    init_n.append(f"n{n_index+2} = {st}")
+    init_n.append(f"n{n_index+3} = {ed}")
+
+    model_logic = []
+    conds = []
+    if round_digit == digit:
+        conds.append("i != 0")
+    if op == "반올림":
+        if banolim_key == 0:
+            conds.append("i < 5")
+        else:
+            conds.append("i >= 5")
+
+    if conds:
+        conds_str = "if {}:\n".format(" and ".join(conds))
+        sol = "result = []\n" \
+              F"for i in range(n{n_index+2}, n{n_index+3} + 1):\n" \
+              f"\t{conds_str}" \
+              "\t\tresult.append(i)\n" \
+              "answer = len(result)"
+    else:
+        sol = "result = []\n" \
+              f"for i in range(n{n_index+2}, n{n_index+3} + 1):\n" \
+              "\tresult.append(i)\n" \
+              "answer = len(result)"
+
+    model_logic.append(sol)
+    model_output_lst = init_n + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
