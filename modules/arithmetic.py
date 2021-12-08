@@ -286,3 +286,82 @@ def simple_arithmetic_2_1():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def equation_1():
+    """
+    template: "합이 x이고 차가 y인 두 수가 있습니다. 두 수 중에서 더 작은 수를 구하시오."
+    """
+
+    model_logic = []
+    op_str = random.choice([
+        "큰",
+        "작은",
+    ])
+    x, y = sorted(random.sample(range(1, 300), 2))
+    a = x + y
+    b = y - x
+
+    question, init_n, a_index, b_index = random.choice([
+        (f"합이 {a}이고 차가 {b}인 두 수가 있습니다. 두 수 중에서 더 {op_str} 수를 구하시오.", [f"n0 = {a}", f"n1 = {b}"], 0, 1),
+        (f"차가 {b}이고 합이 {a}인 두 수가 있습니다. 두 수 중에서 더 {op_str} 수를 구하시오.", [f"n0 = {b}", f"n1 = {a}"], 1, 0),
+    ])
+    if op_str == "큰":
+        model_logic.append("t0 = n0 + n1")
+    else:
+        # TODO: abs()
+        model_logic.append(f"t0 = abs(n{a_index} - n{b_index})")
+    model_logic.append("answer = t0 / 2")
+
+    model_output_lst = init_n + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
+
+
+def equation_2():
+    """
+    template: "A가 책을 펼쳤는데 두 쪽수의 합이 x이었습니다. A가 펼친 두 쪽수 중 큰 수를 쓰시오."
+    """
+
+    person = random.choice(PEOPLE_NAMES)
+    person_e = pick_e(person)
+    subject = random.choice(SUBJECTS + [""])
+    op, cond_str1 = ('+', '합이')
+
+    v1 = random.randint(50, 200)
+    if op == '*':
+        value = v1 * (v1 + 1)
+    else:
+        value = v1 + (v1 + 1)
+
+    option2 = random.choice([
+        "두 쪽수 ",
+        "페이지 ",
+        "두 페이지 ",
+        "쪽수 ",
+        "쪽 ",
+    ])
+
+    cond2, cond_strs2 = random.choice([
+        ('max', ['큰 수를 구하시오.', '큰 수는?', '큰 수의 값은?', '큰 수의 값을 구하면?', '큰 수를 쓰시오.']),
+        ('min', ['작은 수를 구하시오.', '작은 수는?', '작은 수의 값은?', '작은 수의 값을 구하면?', '작은 수를 쓰시오.'])
+    ])
+    cond_str2 = random.choice(cond_strs2)
+
+    model_output_lst = []
+    model_output_lst.append(f"n0 = {value}")
+
+    if cond2 == 'max':
+        model_output_lst.append(f"answer = n0 // 2 + 1")
+    if cond2 == 'min':
+        model_output_lst.append(f"answer = n0 // 2")
+
+    question = f"{person_e}가 {subject}책을 펼쳤는데 두 쪽수의 {cond_str1} {value}이었습니다. {person_e}가 펼친 {option2}중 {cond_str2}"
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
