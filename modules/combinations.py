@@ -1,7 +1,8 @@
 # 조합하기
 import random
-from itertools import permutations, combinations
+from itertools import permutations, combinations, product
 from utils.utils import postprocessing, get_answer
+from utils.common import COLORS, OBJECTS, ANIMAL_NAMES, PEOPLE_NAMES
 
 
 Q_EOMIS = ['입니까?', '인가요?', '인가?', '인지 구하시오.', '인지 구하세요.', '인지 구하여라.', '인지 쓰시오.',
@@ -241,9 +242,177 @@ def comb_num_seq_counting():
     return sample_l
 
 
+def comb_choice():
+    """
+    대상들 중에서 지정된 개수를 선택하는 것과 관련된 조합 문제
+
+    Rule
+    영어 대문자 : 사람이름
+    영어 소문자 : 수 or 숫자
+    num_seq : 나열된 수 or 숫자
+    {영어 소문자}_kr : 숫자, 수 한글화
+
+    t_2_1
+        obj_seq이 1개씩 있습니다. 이 obj1 중 서로 다른 x개의 obj1을 고르는 방법은 모두 몇 가지입니까?
+
+    t_2_2
+        obj1 x개를 서로 다른 y_kr 마리의 obj2에게 나누어 주려고 합니다. obj2는 적어도 obj1 1개는 받습니다. obj1를 나누어 주는 방법은 모두 몇 가지입니까?
+
+    t_2_3
+        people_seq x명이 한 줄로 설 떄, X, Y이가 이웃하여 서는 경우의 수를 구하시오.
+
+    t_2_4
+        두개의 주사위를 동시에 던질 때, 나오는 눈의 수의 합이 x가 되는 경우의 수는 얼마인가?
+
+    t_2_5
+        X이가 obj1에서 x원짜리 obj2를 사려고 한다. y원짜리 동전 z개, a원 짜리 동전 b개, c원짜리 동전 d개를 가지고 있을 때, obj2 값을 지불하는 방법의 수는?
+    """
+
+    sample_l = []
+
+    # unit 문구
+    simple_q_eomis = random.choice(SIMPLE_Q_EOMIS)
+    q_eomis = random.choice(Q_EOMIS)
+
+    o1 = random.choice(OBJECTS)
+
+    tmp_num_l = random.sample(range(1,10), 2)
+    n, r = max(tmp_num_l), min(tmp_num_l)
+    color_l = random.sample(COLORS, n)
+
+    def o_str(o_l):
+        return ', '.join(o_l)
+
+    def o_code(o_l):
+        txt_l = []
+        for o in o_l:
+            txt_l.append('\'' + o + '\'')
+        return ', '.join(txt_l)
+
+    def o_with_ad_str(obj, adj_l):
+        txt_l = []
+        for adj in adj_l:
+            txt_l.append(adj + ' ' + obj)
+        return ', '.join(txt_l)
+
+    def o_with_ad_code(obj, adj_l):
+        txt_l = []
+        for adj in adj_l:
+            txt_l.append('\'' + adj + ' ' + obj + '\'')
+        return ', '.join(txt_l)
+
+    # 기본 조합
+    t_2_1 = [
+        (f'{o_with_ad_str(o1, color_l)}이 1개씩 있습니다. 이 {o1} 중 서로 다른 {r}개의 {o1}을 고르는 방법은 모두 몇 가지 {q_eomis}',
+         f'n0 = 1\n'
+         f'n1 = {r}\n'
+         f'l0 = [{o_with_ad_code(o1, color_l)}]\n'
+         f't0 = list(combinations(l0, n1))\n'
+         f'answer = len(t0)'),
+    ]
+
+    sample_l.append(random.choice(t_2_1))
+
+    o2 = random.choice(OBJECTS)
+    tmp_n_0 = random.randint(2,4)
+    tmp_n_1 = tmp_n_0 + random.randint(0,5)
+    animal = random.choice(ANIMAL_NAMES)
+
+    tmp_w_l_0 = ['합니다.', '하는데,', '할 때,']
+    tmp_w_0 = random.choice(tmp_w_l_0)
+    # 분배 조합
+    t_2_2 = [
+        (f'{o2} {tmp_n_1}개를 서로 다른 {digits[tmp_n_0]} 마리의 {animal}에게 나누어 주려고 {tmp_w_0} {animal}들은 적어도 {o2} 1개는 받습니다. {o2}를 나누어 주는 방법은 모두 몇 가지{q_eomis}',
+         f'n0 = {tmp_n_1}\n'
+         f'n1 = 1\n'
+         f'C(n0-1, {tmp_n_0}-1)\n'
+         f'answer = result'),
+    ]
+
+    sample_l.append(random.choice(t_2_2))
+
+    tmp_n_0 = random.randint(3, 7)
+    tmp_name_l = random.sample(PEOPLE_NAMES, tmp_n_0)
+    tmp_name_l_2 = random.sample(tmp_name_l, 2)
+
+    # 줄세우기
+    tmp_w_l_0 = ['설 때,', '세울 때,']
+    t_2_3 = [
+        (f'{o_str(tmp_name_l)} {tmp_n_0}명이 한 줄로 {random.choice(tmp_w_l_0)} {o_str(tmp_name_l_2)}이가 이웃하여 서는 경우의 수를 {simple_q_eomis}',
+         f'n0 = {tmp_n_0}\n'
+         f'l0 = [{o_code(tmp_name_l)}]\n'
+         f'l1 = [{o_code(tmp_name_l_2)}]\n'
+         f'answer = math.factorial(n0-1) * 2'),
+    ]
+
+    sample_l.append(random.choice(t_2_3))
+
+    # 주사위
+    rand_dice_add = random.randint(3, 11)
+
+    t_2_4 = [
+        (f'2개의 주사위를 동시에 던질 때, 나오는 눈의 수의 합이 {rand_dice_add}가 되는 경우의 수는 얼마{q_eomis}',
+         f'n0 = 2\n'
+         f'n1 = {rand_dice_add}\n'
+         f'dice_add_eq(n1)\n'
+         f'answer = result'),
+    ]
+
+    sample_l.append(random.choice(t_2_4))
+
+    # 화폐 모아서 가격 지불하는 경우의 수
+    name_2_5 = random.choice(PEOPLE_NAMES)
+    MARKET = ['슈퍼마켓', '시장', '슈퍼', '문방구', '문구점', '자판기', '가게', '편의점']
+    tmp_obj = random.choice(OBJECTS)
+    market_2_5 = random.choice(MARKET)
+    coins = [10, 50, 100, 500]
+    coin_cnt = random.randint(1, len(coins))
+    coin_cnt_dict = {}
+    coin_pick = random.sample(coins, coin_cnt)
+    for coin in coin_pick:
+        coin_cnt_dict[coin] = random.choice(range(1, 9))
+
+    tmp_prod_iter = product(*list(map(lambda x: range(1, x+1), coin_cnt_dict.values())))
+    coin_val_l = []
+    for p in tmp_prod_iter:
+        coin_val_l.append(sum([x*y for x, y in zip(coin_cnt_dict.keys(), p)]))
+    rand_coin_val = random.choice(coin_val_l)
+
+    def tmp_coin_cotext(idx: int, coin_d: dict) -> tuple:
+        tmp_txt_l = []
+        tmp_code_l = []
+        tmp_dict_code_l = []
+        for _i, _k in enumerate(coin_d.keys()):
+            _coin = _k
+            _coin_cnt = coin_d[_k]
+            tmp_txt_l.append(f'{_coin}원짜리 동전 {_coin_cnt}개')
+            tmp_code_l.append(f'n{idx + 2 * _i} = {_k}')
+            tmp_code_l.append(f'n{idx + 1 + 2 * _i} = {_coin_cnt}')
+            tmp_dict_code_l.append(f'n{idx + 2 * _i}: n{idx + 1 + 2 * _i}')
+
+        tmp_txt = ', '.join(tmp_txt_l)
+        tmp_code = '\n'.join(tmp_code_l)
+        tmp_dict_code = '{' + ', '.join(tmp_dict_code_l) + '}'
+
+        return tmp_txt, tmp_code, tmp_dict_code
+
+    t_2_5 = [
+        (f'{name_2_5}이가 {market_2_5}에서 {rand_coin_val}원짜리 {tmp_obj}를 사려고 한다. {tmp_coin_cotext(1, coin_cnt_dict)[0]}를 가지고 있을 때, {tmp_obj} 값을 지불하는 방법의 수는 얼마{q_eomis}',
+         f'n0 = {rand_coin_val}\n'
+         f'{tmp_coin_cotext(1, coin_cnt_dict)[1]}\n'
+         f't0 = {tmp_coin_cotext(1, coin_cnt_dict)[2]}\n'
+         f'count_coin(n0, t0)\n'
+         f'answer = result'),
+    ]
+
+    sample_l.append(random.choice(t_2_5))
+
+    return sample_l
+
+
 def _comb() -> list:
     results = []
-    for i in [comb_num_seq_counting, ]:
+    for i in [comb_num_seq_counting, comb_choice]:
         for question, model_output in i():
             try:
                 code = postprocessing(model_output, question)

@@ -132,3 +132,45 @@ def num_permutations_filter_add(n_l, n):
              f'\tif c[0] + c[1] == {n}:\n' \
              f'\t\tresult.append((c[0], c[1]))'
     return result
+
+
+def C(n, r):
+    # from itertools import combinations
+    # result = len(list(combinations(range(n), r)))
+    result = f'from itertools import combinations\n' \
+             f'result = len(list(combinations(range({n}), {r})))'
+    return result
+
+
+def dice_add_eq(n):
+    """
+    주사위 두개의 합이 n인 경우의 수
+    """
+    # from itertools import product
+    # result = 0
+    # for i, j in product(range(1,7), range(1,7)):
+    #     if i + j == n:
+    #         result += 1
+    result = f'from itertools import product\n' \
+             f'result = 0\n' \
+             f'for i, j in product(range(1,7), range(1,7)):\n' \
+             f'\tif i + j == {n}:\n' \
+             f'\t\tresult += 1'
+    return result
+
+
+def count_coin(n: int, d: dict):
+    # from itertools import product
+    # result = 0
+    # cnt_prod = product(*list(map(lambda x: range(0, x+1), d.values())))
+    # for cnt in cnt_prod:
+    #     if n == sum([x*y for x, y in zip(d.keys(), cnt)]):
+    #         result += 1
+    # return result
+    result = f'from itertools import product\n' \
+             f'result = 0\n' \
+             f'cnt_prod = product(*list(map(lambda x: range(0, x+1), {d}.values())))\n' \
+             f'for cnt in cnt_prod:\n' \
+             f'\tif {n} == sum([x*y for x, y in zip({d}.keys(), cnt)]):\n' \
+             f'\t\tresult += 1'
+    return result
