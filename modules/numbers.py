@@ -222,3 +222,99 @@ def numbers_1_2():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def numbers_1_3():
+    """
+    template: "a에서 b까지의 수가 있을 때, x보다는 크고, y보다는 작은 수는 얼마입니까?"
+    """
+
+    range_st, range_ed = sorted(random.sample(range(0, 100), 2))
+    compare_str_d = {
+        'gt': [
+            '초과',
+            '보다 크고,',
+            '보다는 크고,',
+        ],
+        'lt': [
+            '미만인',
+            '보다 작은',
+            '보다는 작은',
+        ],
+        'gte': [
+            '이상',
+            '이상이고,',
+            '보다 크거나 같고,',
+            '보다 작지 않고,',
+        ],
+        'lte': [
+            '이하인',
+            '보다 작거나 같은',
+            '보다 크지 않은',
+        ]
+    }
+    op_d = {
+        'gt': '<',
+        'lt': '<',
+        'gte': '<=',
+        'lte': '<=',
+    }
+
+    eomi1 = random.choice(['에서', '부터'])
+    op1 = random.choice(['gt', 'gte'])
+    op2 = random.choice(['lt', 'lte'])
+    op1_str = random.choice(compare_str_d[op1])
+    op2_str = random.choice(compare_str_d[op2])
+    template_id = random.randint(0, 1)
+    # 값
+    if template_id == 0:
+        value = random.randint(range_st, range_ed)
+        st = value - 1
+        ed = value + 1
+        if op1[-1] == 'e':
+            st += 1
+        if op2[-1] == 'e':
+            ed -= 1
+        template_str = random.choice([
+            '수는 얼마입니까?',
+            '수는 무엇입니까?',
+            '수의 값은?',
+            '수를 구하면?',
+        ])
+    # 개수
+    elif template_id == 1:
+        st, ed = sorted(random.sample(range(0, 100), 2))
+        template_str = random.choice([
+            '수의 개수는?',
+            '수는 몇 개입니까?',
+            '수는 모두 몇 개입니까?',
+            '수는 모두 몇 개있습니까?',
+            '수는 전부 몇 개일까요?',
+        ])
+
+    model_output_lst = []
+    model_output_lst.append(f"n0 = {range_st}")
+    model_output_lst.append(f"n1 = {range_ed}")
+    model_output_lst.append(f"n2 = {st}")
+    model_output_lst.append(f"n3 = {ed}")
+    gt = op_d[op1]
+    lt = op_d[op2]
+
+    if template_id == 0:
+        sol = "for i in range(n0, n1 + 1):\n" \
+              f"\tif n2 {gt} i {lt} n3:\n" \
+              "\t\tanswer = i"
+    elif template_id == 1:
+        sol = "result = []\n" \
+              "for i in range(n0, n1 + 1):\n" \
+              f"\tif n2 {gt} i {lt} n3:\n" \
+              "\t\tresult.append(i)\n" \
+              "answer = len(result)"
+    model_output_lst.append(sol)
+
+    question = f"{range_st}{eomi1} {range_ed}까지의 수가 있을 때, {st}{op1_str} {ed}{op2_str} {template_str}"
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
