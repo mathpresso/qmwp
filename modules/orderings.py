@@ -158,6 +158,32 @@ def _ordering():
         ), o_2_1))
     )
 
+    # 2-2
+    # 1-2와 중복
+
+    # 2-3
+    # 학생들이 한 줄로 서 있습니다. X는 맨 뒤에 서 있습니다. Y는 앞에서 x번째에 서 있습니다. X와 Y 사이에 y명이 서 있을 때,
+    # 줄을 서 있는 학생은 모두 몇 명입니까?
+    t_2_3 = [
+        ('학생들이 한 줄로 서 있습니다. {A}는 맨 뒤에 서 있습니다. {B}는 앞에서 {front}번째에 서 있습니다. '
+         '{A}와 {B} 사이에 {between}명이 서 있을 때, 줄을 서 있는 학생은 모두 몇 명{eomi}',
+         'n0 = {front}\nn1 = {between}\nanswer = n0 + n1 + 1'),
+    ]
+
+    A, B = list(map(pick_e, random.sample(PEOPLE_NAMES, 2)))
+    front = random.randint(1, 20)
+    back = random.randint(1, 20)
+    between = random.randint(1, 20)
+
+    eomi = random.choice(EOMIS)
+
+    o_2_3 = random.choice(t_2_3)
+    results.append(
+        tuple(map(lambda x: x.format(
+            A=A, B=B, front=front, back=back, between=between, eomi=eomi,
+        ), o_2_3))
+    )
+
     return results
 
 def _postprocess_results(results):
