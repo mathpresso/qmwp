@@ -318,3 +318,210 @@ def numbers_1_3():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def numbers_2_1():
+    """
+    template: "A를 7로 나누면 몫은 B이고 나머지는 C가 됩니다. 이 식에서 몫과 나머지가 같습니다. A 중 가장 큰 수를 구하시오"
+    """
+    templates = [
+        (
+            [
+                "{x0_str} {n0_str} {op_str} 몫은 {x1_str} 나머지는 {x2_str} ",
+            ],
+            "n0 = {n0}",
+            "x0 = '{x0}'{newline}x1 = '{x1}'{newline}x2 = '{x2}'",
+        ),
+    ]
+
+    options1 = [
+        ("", 0),
+        ("{lst_str} 자연수입니다. ", 1),
+        ("{lst_str} 모두 자연수입니다. ", 1),
+        ("{lst_str} 정수입니다. ", 0),
+    ]
+
+    op_strs = [
+        '나누면',
+        '나누었을 때',
+        '나누게 되면',
+    ]
+
+    x0, x1, x2 = random.sample(VARIABLES, 3)
+    n0 = random.randint(2, 20)
+
+    op_str = random.choice(op_strs)
+    x0_str = postfix(f'{x0}', '을(를)')
+    x1_str = random.choice([
+        f'{x1}이며',
+        f'{x1}이고',
+        "{} 되고".format(postfix(f'{x1}', '이(가)')),
+        f'{x1}',
+    ])
+    x2_str = random.choice([
+        "{} 됩니다.".format(postfix(f'{x2}', '이(가)')),
+        f'{x2}입니다.',
+    ])
+    n0_str = postfix(f'{n0}', '으로')
+
+    q_templates, init_n_template, init_x_template = random.choice(templates)
+    question = random.choice(q_templates).format(
+        x0_str=x0_str, n0_str=n0_str, op_str=op_str, x1_str=x1_str, x2_str=x2_str)
+
+    model_logic = []
+    init_n = [init_n_template.format(n0=n0)]
+
+    # add optional string to question
+    lst_str = postfix(f'{x0}, {x1}, {x2}', '은(는)')
+    option1, option_cond_key = random.choice(options1)
+    question += option1.format(lst_str=lst_str)
+
+    # condition
+    cond_options = [
+        "이 식에서 ",
+        "다음 식에서 ",
+        "식에서 ",
+        "",
+    ]
+
+    eos_conds1 = [
+        "같습니다.",
+        "같을 때,",
+    ]
+
+    eos_cond = random.choice(eos_conds1)
+    cond_option = random.choice(cond_options)
+
+    n1 = random.randint(1, n0 - 1)
+    n1_str = random.choice([
+        f'{n1}만큼',
+        f'{n1}',
+        postfix(f'{n1}', '이(가)'),
+    ])
+
+    cond_template = [
+        (
+            [
+                "{cond_option}몫과 나머지가 {eos_cond}",
+                "{cond_option}나머지와 몫이 {eos_cond}",
+            ],
+            "t1 = f'{x1} = {x2}'",
+            f"{x1} == {x2}",
+        ),
+        (
+            [
+                "{cond_option}몫이 나머지보다 {n1_str} 클 때,",
+                "{cond_option}몫이 나머지보다 {n1_str} 큽니다.",
+            ],
+            "t1 = f'{x1} = {x2} + {n1}'",
+            f"{x1} == {x2} + n1",
+        ),
+        (
+            [
+                "{cond_option}나머지가 몫보다 {n1_str} 작을 때,",
+                "{cond_option}나머지가 몫보다 {n1_str} 작습니다.",
+            ],
+            "t1 = f'{x2} = {x1} - {n1}'",
+            f"{x2} == {x1} - n1",
+        ),
+        (
+            [
+                "{cond_option}몫이 나머지보다 {n1_str} 작을 때,",
+                "{cond_option}몫이 나머지보다 {n1_str} 작습니다.",
+            ],
+            "t1 = f'{x1} = {x2} - {n1}'",
+            f"{x1} == {x2} - n1",
+        ),
+        (
+            [
+                "{cond_option}나머지가 몫보다 {n1_str} 클 때,",
+                "{cond_option}나머지가 몫보다 {n1_str} 큽니다.",
+            ],
+            "t1 = f'{x2} = {x1} + {n1}'",
+            f"{x2} == {x1} + n1",
+        ),
+    ]
+
+    cond_template_key = random.randint(0, len(cond_template) - 1)
+    cond_qs, cond_s, cond_s2 = cond_template[cond_template_key]
+    cond_q = random.choice(cond_qs)
+
+    if cond_template_key != 0:
+        init_n.append(f"n1 = {n1}")
+
+    # cond
+    question += cond_q.format(cond_option=cond_option, eos_cond=eos_cond, n1_str=n1_str)
+
+    # nth_largest, smallest 는 skip
+    target_conds = [
+        ('max', ['가장 큰 수를 구하시오.', '가장 큰 수는?', '가장 큰 수의 값은?', '가장 큰 수의 값을 구하면?', '가장 큰 수를 쓰시오.']),
+        ('min', ['가장 작은 수를 구하시오.', '가장 작은 수는?', '가장 작은 수의 값은?', '가장 작은 수의 값을 구하면?', '가장 작은 수를 쓰시오.']),
+    ]
+
+    target_f, target_cond_strs = random.choice(target_conds)
+    target_cond_str = random.choice(target_cond_strs)
+
+    target_option1 = random.choice(
+        [
+            "",
+            "나누는 수 ",
+            "피제수 ",
+        ]
+    )
+    target_option2 = random.choice(
+        [
+            "",
+            "나머지 "
+        ]
+    )
+
+    target_template = [
+        (
+            [
+                f"{x0} 중 {target_cond_str}",
+                f"나누어지는 수 {x0} 중 {target_cond_str}",
+                f"피제수 {x0} 중 {target_cond_str}",
+            ],
+            f"answer = {target_f}(result[x0])",
+            f"{x0}",
+        ),
+        (
+            [
+                f"{target_option1}{x1} 중 {target_cond_str}",
+            ],
+            f"answer = {target_f}(result[x1])",
+            f"{x1}",
+        ),
+        (
+            [
+                f"{target_option2}{x2} 중 {target_cond_str}",
+            ],
+            f"answer = {target_f}(result[x2])",
+            f"{x2}",
+        ),
+    ]
+
+    targets, target_code, target_v = random.choice(target_template)
+    target = random.choice(targets)
+
+    # 자연수 조건
+    if option_cond_key == 1:
+        cond_s2 = f"{cond_s2} and {x0} > 0 and {x1} > 0 and {x2} > 0"
+
+    sol = f"result = []\n" \
+          f"for {x0} in range(1, 10000):\n" \
+          f"\t{x1} = {x0} // n0\n" \
+          f"\t{x2} = {x0} % n0\n" \
+          f"\tif {cond_s2}:\n" \
+          f"\t\tresult.append({target_v})"
+
+    model_logic.append(sol)
+    model_logic.append(f"answer = {target_f}(result)")
+
+    question += ' '
+    question += target
+    model_output = NEWLINE.join(init_n + model_logic)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
