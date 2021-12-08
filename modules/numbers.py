@@ -525,3 +525,174 @@ def numbers_2_1():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def numbers_2_2(solution_id=1):
+    """
+    template: "서로 다른 두 자연수 A, B가 있습니다. A를 a로 나누면 몫은 b이고 나머지는 B가 됩니다. 나머지 B가 가장 큰 수일 때 A를 구하시오."
+    """
+
+    p, q = random.sample(range(5, 100), 2)
+    a, b = random.sample(VARIABLES, 2)
+    a_l = postfix(a, '을(를)')
+    b_e = postfix(b, '이(가)')
+
+    init_n = []
+    init_x = []
+    model_logic = []
+
+    option1, init_n_1, n_index, condition = random.choice([
+        (f"서로 다른 두 자연수 {a}, {b_e} 있습니다. ", "n0 = 2", 1, "{0} > 0 and {1} > 0 and {0} != {1}"),
+        (f"두 자연수 {a}, {b_e} 있습니다. ", "n0 = 2", 1, "{0} > 0 and {1} > 0"),
+        (f"두 수 {a}, {b_e} 있습니다. ", "n0 = 2", 1, ""),
+        (f"서로 다른 두 수 {a}, {b_e} 있습니다. ", "n0 = 2", 1, "{0} != {1}"),
+        (f"두 정수 {a}, {b_e} 있습니다. ", "n0 = 2", 1, ""),
+        (f"서로 다른 자연수 {a}, {b_e} 있습니다. ", "", 0, "{0} > 0 and {1} > 0 and {0} != {1}"),
+        (f"정수 {a}, {b_e} 있습니다. ", "", 0, ""),
+        (f"자연수 {a}, {b_e} 있습니다. ", "", 0, "{0} > 0 and {1} > 0"),
+        (f"", "", 0, ""),
+    ])
+    init_n_1 = ""
+    n_index = 0
+
+    n1_str = postfix(str(p), '로')
+    n2_str = random.choice([
+        f'{q}이고',
+        '{} 되고'.format(postfix(str(q), '이(가)')),
+        f'{q}이며,'
+
+    ])
+    x2_str = random.choice([
+        f'{b_e} 됩니다.',
+        f'{b}입니다.',
+        f'{b}일 때,',
+    ])
+
+    t1 = a
+    t2 = b
+    if random.random() < 0.5:
+        t1 = b
+        t2 = a
+
+    t1_str = postfix(t1, '이(가)')
+    t2_str = random.choice([
+        '{} 구하시오.'.format(postfix(t2, '을(를)')),
+        f'{t2}의 값을 구하시오.',
+        f'{t2}의 값은?',
+    ])
+
+    cond_d = {
+        'max': '{} 큰 수',
+        'min': '{} 작은 수',
+    }
+
+    cond_to_str = {
+        0: '가장',
+        1: '첫 번째로',
+        2: '두 번째로',
+        3: '세 번째로',
+        4: '네 번째로',
+        5: '다섯 번째로',
+        6: '여섯 번째로',
+        7: '일곱 번째로',
+        8: '여덟 번째로',
+        9: '아홉 번째로',
+    }
+
+    predefined_func = {
+        'max': 'nth_largest',
+        'min': 'nth_smallest',
+    }
+
+    cond_n = random.randint(0, min(p, 9))
+    cond_f = random.choice(['min', 'max'])
+
+    cond_str = cond_d[cond_f].format(cond_to_str[cond_n]) + '일 때'
+
+    # init n
+    if init_n_1:
+        init_n.append(init_n_1)
+    init_n.append(f'n{n_index} = {p}')
+    init_n.append(f'n{n_index + 1} = {q}')
+    if cond_n > 0:
+        init_n.append(f'n{n_index + 2} = {cond_n}')
+
+    # init x
+    init_x.append(f"x0 = '{a}'")
+    init_x.append(f"x1 = '{b}'")
+
+    # model logic1
+    # loop 돌면서 조건을 만족하는 수 중 이후에 활용할 값을(t1) result에 담고 조건에 맞게 뽑은 다음에 구하고자 하는 target(t2) 를 계산한다.
+    if condition:
+        condition_str = condition.format(a, b)
+        sol1 = "result = []\n" \
+               f"for {a} in range(1, 10000):\n" \
+               f"\t{b} = {a} % n{n_index}\n" \
+               f"\tif {a} // n{n_index} == n{n_index + 1} and {condition_str}:\n"
+    else:
+        sol1 = "result = []\n" \
+               f"for {a} in range(1, 10000):\n" \
+               f"\t{b} = {a} % n{n_index}\n" \
+               f"\tif {a} // n{n_index} == n{n_index + 1}:\n"
+    if t1 == a:
+        sol_1_1 = f"\t\tresult.append({a})"
+    else:
+        sol_1_1 = f"\t\tresult.append({b})"
+
+    model_logic.append(sol1 + sol_1_1)
+
+    if cond_n > 1:
+        func = predefined_func[cond_f]
+        model_logic.append(f"t0 = {func}(result, n{n_index + 2})")
+    else:
+        func = cond_f
+        model_logic.append(f"t0 = {func}(result)")
+
+    if t2 == a:
+        model_logic.append(f"t1 = n{n_index} * n{n_index + 1}")
+        model_logic.append(f"answer = t1 + t0")
+    else:
+        model_logic.append(f"answer = t0 % n{n_index}")
+
+    # model logic2
+    # 공식 풀이
+    # TODO: 정수, 자연수 처리 해야함. 안되어있음.
+    model_logic2 = []
+    # 피제수
+    if t2 == a:
+        model_logic2.append(f"t0 = n{n_index} * n{n_index + 1}")
+        if cond_f == 'min':
+            if cond_n:
+                model_logic2.append(f"answer = t0 + n{n_index + 2} - 1")
+            else:
+                model_logic2.append(f"answer = t0")
+        else:
+            if cond_n:
+                model_logic2.append(f"t1 = t0 + n{n_index}")
+                model_logic2.append(f"answer = t1 - n{n_index + 2}")
+            else:
+                model_logic2.append(f"answer = t0 + n{n_index} - 1")
+    # 나머지
+    elif t2 == b:
+        if cond_f == 'min':
+            if cond_n:
+                model_logic2.append(f"answer = n{n_index + 2} - 1")
+            else:
+                model_logic2.append(f"answer = 0")
+        else:
+            if cond_n:
+                model_logic2.append(f"answer = n{n_index} - n{n_index + 2}")
+            else:
+                model_logic2.append(f"answer = n{n_index} - 1")
+
+    question = f"{option1}{a_l} {n1_str} 나누면 몫은 {n2_str} 나머지는 {x2_str} {t1_str} {cond_str} {t2_str}"
+
+    if solution_id == 1:
+        model_output_lst = init_n + model_logic
+    else:
+        model_output_lst = init_n + model_logic2
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
