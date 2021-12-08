@@ -251,3 +251,38 @@ def simple_arithmetic_1_1():
     answer = get_answer(code)
 
     return question, model_output, code, answer
+
+
+def simple_arithmetic_2_1():
+    """
+    template: "obj이 x개씩 y봉지, 낱개 z개 있습니다. obj은 모두 몇 개입니까?
+               obj가 x장씩 y묶음과 낱개로 z장 있습니다. obj는 모두 몇 장입니까?
+               A는 줄넘기를 x번씩 y회한후 z번을 더 했습니다. A는 줄넘기를 모두 몇 번 했습니까?
+               A가 obj을 x송이씩 꽃병 y개에 꽂았는데 z송이가 남았습니다. obj은 모두 몇 송이입니까?"
+    """
+    obj = random.choice(OBJECTS)
+    obj_e = postfix(obj, '이')
+    obj_n = postfix(obj, '은')
+
+    a = random.randint(5, 20)
+    b = random.randint(1, 10)
+    c = random.randint(0, a)
+    all_str = random.choice(["모두 ", "총 ", "전부 ", ""])
+
+    question = f'{obj_e} {a}개씩 {b}묶음, 낱개로 {c}개 있습니다. {obj_n} {all_str}몇 개입니까?'
+
+    init_n = []
+    model_logic = []
+
+    init_n.append(f"n0 = {a}")
+    init_n.append(f"n1 = {b}")
+    init_n.append(f"n2 = {c}")
+    model_logic.append("t0 = n0 * n1")
+    model_logic.append("answer = t0 + n2")
+
+    model_output_lst = init_n + model_logic
+    model_output = NEWLINE.join(model_output_lst)
+    code = postprocessing(model_output, question)
+    answer = get_answer(code)
+
+    return question, model_output, code, answer
