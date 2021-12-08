@@ -1,13 +1,13 @@
 # 크기 비교
 from random import choice, choices, randint, sample
+from utils.common import *
+from utils.utils import get_answer, pick_e, postfix, postprocessing, generate_number
 
-from ..utils.common import *
-from ..utils.utils import get_answer, pick_e, postfix, postprocessing, _generate_number
 
 SIMPLE_EOMIS = ['구하시오.', '구하세요.', '구하여라.', '쓰시오.',
-    '알아보세요.', '알아보시오.', '알아보아라.']
+                '알아보세요.', '알아보시오.', '알아보아라.']
 EOMIS = ['입니까?', '인가요?', '인가?', '인지 구하시오.', '인지 구하세요.', '인지 구하여라.', '인지 쓰시오.',
-    '인지 알아보세요.', '인지 알아보시오.', '인지 알아보아라.']
+         '인지 알아보세요.', '인지 알아보시오.', '인지 알아보아라.']
 
 
 def toss_coin():
@@ -145,8 +145,8 @@ def c_1_3():
             '{n_init_str}\nl0 = [{seq_list}]\nresult = []\nfor i in l0:\n\tif i < {compare}:\n\t\tresult.append(i)\nanswer = len(result)'),
     ]
     len_seq = randint(2, 7)
-    seq = [_generate_number() for _ in range(len_seq)]
-    num = _generate_number()
+    seq = [generate_number() for _ in range(len_seq)]
+    num = generate_number()
 
     n_init_str = "\n".join([f"n{idx} = {elem}" for idx, elem in enumerate([len_seq, *seq, num])])
 
