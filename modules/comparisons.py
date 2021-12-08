@@ -30,7 +30,7 @@ def _comparison():
     ganada_seq x개의 상자가 있습니다. B 상자는 D 상자보다 큽니다.
     A 상자는 D 상자보다 작습니다. B 상자는 C 상자보다 작습니다. 크기가 가장 작은 상자는 무엇입니까?
 
-    1-3 (절대 비교)
+    1-3 (절대 비교) [v]
     x개의 수 num_seq이 있습니다. 이 중에서 y보다 큰 수는 모두 몇 개입니까?
 
     2-1 (절대 비교)
@@ -56,7 +56,7 @@ def _comparison():
         list: [description]
     """
     results = []
-    for i in (c_1_1,):
+    for i in (c_1_1, c_1_3,):
         while True:
             try:
                 question, model_output = i()
@@ -121,6 +121,34 @@ def c_1_1():
             A=A, B=B, ops='\n'.join(ops),
             big_eomi=big_eomi, small_eomi=small_eomi, eomi=eomi,
         ), o_1_1))
+
+
+def c_1_3():
+    """
+    # 1-3
+    x개의 수 num_seq이 있습니다. 이 중에서 y보다 큰 수는 모두 몇 개입니까?
+    """
+    t_1_3 = [
+        ('{len_seq}개의 수 {seq} 있습니다. 이 중에서 {num}보다 큰 수는 모두 몇 개{eomi}',
+            '{n_init_str}\nl0 = [{seq_list}]\nresult = []\nfor i in l0:\n\tif i > {compare}:\n\t\tresult.append(i)\nanswer = len(result)'),
+        ('{len_seq}개의 수 {seq} 있습니다. 이 중에서 {num}보다 작은 수는 모두 몇 개{eomi}',
+            '{n_init_str}\nl0 = [{seq_list}]\nresult = []\nfor i in l0:\n\tif i < {compare}:\n\t\tresult.append(i)\nanswer = len(result)'),
+    ]
+    len_seq = randint(2, 7)
+    seq = [_generate_number() for _ in range(len_seq)]
+    num = _generate_number()
+
+    n_init_str = "\n".join([f"n{idx} = {elem}" for idx, elem in enumerate([len_seq, *seq, num])])
+
+    eomi = choice(EOMIS)
+    simple_eomi = choice(SIMPLE_EOMIS)
+
+    o_1_3 = choice(t_1_3)
+    return \
+        tuple(map(lambda x: x.format(
+            len_seq=len_seq, seq=postfix(', '.join(seq), '이(가)'), seq_list=', '.join(seq),
+            num=num, n_init_str=n_init_str, compare=f"n{len(seq)+1}", eomi=eomi, simple_eomi=simple_eomi,
+        ), o_1_3))
 
 
 def comparison(num_samples_to_generate: int = 1_000) -> list:
