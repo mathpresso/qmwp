@@ -151,6 +151,57 @@ def c_1_3():
         ), o_1_3))
 
 
+def c_2_2():
+    """
+    # 2-2
+    x_kr 수 A, B, C, D가 있습니다. A는 a입니다. B는 A보다 b 큰 수입니다.
+    C는 B보다 c 작은 수입니다. D는 C의 d배인 수입니다. 가장 큰 수는 어느 것입니까?
+    """
+    t_2_2 = [
+        ('{len_seq_kr} 수 {seq} 있습니다. {ABCs} 가장 큰 수는 어느 것{eomi}',
+            "{n_init}\nt0 = dict()\n{ops}\nanswer = max(t0, key=t0.get)"),
+        ('{len_seq_kr} 수 {seq} 있습니다. {ABCs} 가장 작은 수는 어느 것{eomi}',
+            "{n_init}\nt0 = dict()\n{ops}\nanswer = min(t0, key=t0.get)"),
+    ]
+    possibilities = ['init']
+    len_seq = randint(2, 7)
+    len_seq_kr = KR_NUMS[len_seq]
+    seq = VARIABLES[:len_seq]
+    ops = []
+    strings = []
+    nums = []
+    for i in range(len_seq):
+        p = choice(possibilities)
+        num = randint(0, 100)
+        nums.append(num)
+        if p == 'init':
+            strings.append(f"{seq[i]}는 {num}입니다.")
+            ops.append(f't0[\'{seq[i]}\'] = n{len(nums)-1}')
+        else:
+            comp = choice([
+                (f'보다 {num} 큰', '+'),
+                (f'보다 {num} 작은', '-'),
+                (f'의 {num}배인', '*')])
+            strings.append(f"{seq[i]}는 {p}{comp[0]} 수입니다.")
+            ops.append(f't0[\'{seq[i]}\'] = t0[\'{p}\'] {comp[1]} n{len(nums)-1}')        
+        possibilities.append(seq[i])
+
+    n_init = [f"n{idx} = {elem}" for idx, elem in enumerate(nums)]
+    eomi = choice(EOMIS)
+    simple_eomi = choice(SIMPLE_EOMIS)
+
+    # 습니다. + 습니다. -> 고, + 습니다.
+    tgt = choice(range(len(strings) - 1))
+    strings[tgt] = strings[tgt].replace('입니다.', choice(['이고,', '이고']))
+
+    o_2_2 = choice(t_2_2)
+    return \
+        tuple(map(lambda x: x.format(
+            len_seq_kr=len_seq_kr, seq=', '.join(seq), ABCs=' '.join(strings), n_init='\n'.join(n_init),
+            ops='\n'.join(ops), eomi=eomi, simple_eomi=simple_eomi,
+        ), o_2_2))
+
+
 def comparison(num_samples_to_generate: int = 1_000) -> list:
     """generate comparison (크기비교 유형) questions
 
