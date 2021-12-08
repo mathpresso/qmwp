@@ -152,6 +152,8 @@ def postprocessing(code, question):
         imports.append(IMPORT_NTH_SMALLEST)
     if "nth_largest" in code:
         imports.append(IMPORT_NTH_LARGEST)
+    if "combinations" in code:
+        imports.append(IMPORT_COMBINATIONS)
 
     # predefined function
     for line in code.split(NEWLINE):
@@ -161,6 +163,30 @@ def postprocessing(code, question):
             tmp += IMPORT_NUM_PERMUTATIONS
             tmp += NEWLINE
             indent = line.rpartition("num_permutations(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "count_digit(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_COUNT_DIGIT
+            tmp += NEWLINE
+            indent = line.rpartition("count_digit(")[0]
+            tmp += indent
+            tmp += f"processed = {line}\n"
+            tmp += indent
+            tmp += "print(processed)"
+            processed = get_answer(tmp)
+            remains.append(processed)
+        elif "filter_sum(" in line:
+            tmp = NEWLINE.join(imports + remains)
+            tmp += NEWLINE
+            tmp += IMPORT_FILTER_SUM
+            tmp += NEWLINE
+            indent = line.rpartition("filter_sum(")[0]
             tmp += indent
             tmp += f"processed = {line}\n"
             tmp += indent

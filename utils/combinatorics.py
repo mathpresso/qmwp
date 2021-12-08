@@ -25,3 +25,21 @@ def num_permutations(n_l: list, r: int):
              '\t\tresult.append(num)'
 
     return result.format(n_l, r)
+
+
+def count_digit(n, m, l_n):
+    # result = 0
+    # for i in range(n, m+1):
+    #     result += str(i).count(str(l))
+    result = f'result = 0\n' \
+             f'for i in range({n}, {m}):\n' \
+             f'\tresult += str(i).count(str({l_n}))'
+    return result
+
+
+def filter_sum(tup_l, n):
+    result = f'result = []\n' \
+             f'for t in {tup_l}:\n' \
+             f'\tif sum(t) == {n}:\n' \
+             f'\t\tresult.append(t)\n'
+    return result

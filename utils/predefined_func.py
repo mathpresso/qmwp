@@ -1,9 +1,12 @@
 # imports
 IMPORT_MATH = "import math"
+IMPORT_COMBINATIONS = "from itertools import combinations"
 
 
 # local functions
 IMPORT_NUM_PERMUTATIONS = "from utils.combinatorics import num_permutations"
+IMPORT_COUNT_DIGIT = "from utils.combinatorics import count_digit"
+IMPORT_FILTER_SUM = "from utils.combinatorics import filter_sum"
 
 
 # lambda functions

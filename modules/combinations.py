@@ -1,6 +1,6 @@
 # 조합하기
 import random
-from itertools import permutations
+from itertools import permutations, combinations
 from utils.utils import postprocessing, get_answer
 
 
@@ -119,6 +119,53 @@ def comb_num_seq_counting():
     ]
 
     sample_l.append(random.choice(t_1_1))
+
+    tmp_rand_num = random.sample(range(3, 1000), 2)
+    nat_num_min, nat_num_max = min(tmp_rand_num), max(tmp_rand_num)
+    rand_digit = random.randint(0, 9)
+
+    t_1_2 = [
+        (f'{nat_num_min}부터 {nat_num_max}까지 자연수를 쓰려고 합니다. 숫자 {rand_digit}는 모두 몇 번 써야 합니까?',
+         f'n0 = {nat_num_min}\n'
+         f'n1 = {nat_num_max}\n'
+         f'n2 = {rand_digit}\n'
+         f'count_digit(n0, n1, n2)\n'
+         f'answer = result')
+    ]
+
+    sample_l.append(random.choice(t_1_2))
+
+    tmp_rand_num_1 = random.randint(5, 15)
+    tmp_rand_num_2 = random.randint(2, 4)
+    sum_l = list(map(lambda x: sum(x), combinations(range(1, tmp_rand_num_1+1), tmp_rand_num_2)))
+    tmp_rand_num_3 = random.choice(sum_l)
+
+    t_1_3 = [
+        (f'{tmp_rand_num_1}보다 작은 자연수 {word_1} 서로 다른 {digits[tmp_rand_num_2]} 수를 동시에 뽑으려고 합니다. {digits[tmp_rand_num_2]} 수의 합이 {tmp_rand_num_3}인 경우의 수를 {simple_q_eomis}',
+         f'n0 = {tmp_rand_num_1}\n'
+         f'n1 = {tmp_rand_num_3}\n'
+         f't0 = list(combinations(range(1, n0), {tmp_rand_num_2}))\n'
+         f'filter_sum(t0, n1)\n'
+         f'answer = len(result)'),
+    ]
+
+    sample_l.append(random.choice(t_1_3))
+
+    t_1_4 = [
+        (f'{num_seq_str} {word_1} {count}개를 뽑아 한 번씩 사용하여 {count_kr} 자리 수를 만들려고 합니다. 만들 수 있는 수 {word_1} {digits_decimal_kr[digit_in_count]}의 자리 숫자가 {num_in_seq_with_digit} 인 가장 큰 수를 {simple_q_eomis}',
+         f'{seq_n_string}\n'
+         f'n{seq_len} = {count}\n'
+         f'n{seq_len+1} = 1\n'
+         f'n{seq_len+2} = {count}\n'
+         f'n{seq_len+3} = {int(10 ** (digit_in_count-1))}\n'
+         f'n{seq_len+4} = {num_in_seq_with_digit}\n'
+         f'l0 = [{num_seq_str}]\n'
+         f'num_permutations(l0, n{seq_len})\n'
+         f't0 = list(filter(lambda x: str(x)[-{digit_in_count}] == str(n{seq_len+4}), result))\n'
+         f'answer = max(t0)'),
+    ]
+
+    sample_l.append(random.choice(t_1_4))
 
     return sample_l
 
