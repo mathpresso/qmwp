@@ -10,13 +10,20 @@ EOMIS = ['입니까?', '인가요?', '인가?', '인지 구하시오.', '인지 
     '인지 알아보세요.', '인지 알아보시오.', '인지 알아보아라.']
 
 
+def toss_coin():
+    if randint(0, 1) == 0:
+        return True
+    else:
+        return False
+
+
 def _comparison():
     """
     크기비교 유형.
 
     결국 모든 것은 `절대 비교`, `상대 비교`, `혼합형`으로 나뉜다.
 
-    1-1 (절대 비교)
+    1-1 (절대 비교) [v]
     X는 x와 y를 모았습니다. Y는 z과 w을 모았습니다. 누가 모은 수가 더 큽니까?
 
     1-2 (상대 비교)
@@ -49,7 +56,7 @@ def _comparison():
         list: [description]
     """
     results = []
-    for i in ():
+    for i in (c_1_1,):
         while True:
             try:
                 question, model_output = i()
@@ -60,6 +67,60 @@ def _comparison():
                 continue
         results.append((question, model_output, code, answer))
     return results
+
+
+def c_1_1():
+    """
+    # 1-1
+    X는 x와 y를 모았습니다. Y는 z과 w을 모았습니다. 누가 모은 수가 더 큽니까?
+    """
+    t_1_1 = [
+        ('{AB} 누가 모은 수가 더 {big_eomi}',
+            '{num_init}\nt0 = dict()\n{ops}\nanswer = max(t0, key=t0.get)'),
+        ('{AB} 누가 모은 수가 더 {small_eomi}',
+            '{num_init}\nt0 = dict()\n{ops}\nanswer = min(t0, key=t0.get)'),
+    ]
+    len_seq = 2
+    seq = sample(PEOPLE_NAMES, len_seq)
+    A, B = seq[0], seq[1]
+    ops = []
+    strings = []
+    nums = []
+    num12_init = ''
+    comma_vs_wa = toss_coin()
+    for i in range(len_seq):
+        num_seq_len = randint(1, 5)
+        num_seq = choices(range(100), k=num_seq_len)
+        nums += [f"n{idx + len(nums)} = {elem}" for idx, elem in enumerate(num_seq)]
+        if comma_vs_wa:
+            strings.append(f"{pick_e(seq[i])}는 " + \
+                ' '.join([f'{postfix(str(j), "와(과)")}' for j in num_seq[:-1]]) + \
+                (' ' if len(num_seq) > 1 else '') + \
+                f"{postfix(str(num_seq[-1]), '을')} 모았습니다.")
+        else:
+            strings.append(f"{pick_e(seq[i])}는 " + \
+                ', '.join([str(j) for j in num_seq[:-1]]) + \
+                (', ' if len(num_seq) > 1 else '') + \
+                f"{postfix(str(num_seq[-1]), '을')} 모았습니다.")
+        ops.append(f"t0['{seq[i]}'] = sum([{', '.join([f'n{len(nums) - j - 1}' for j in range(num_seq_len)[::-1]])}])")
+        if i == 1:
+            num12_init += '\n'.join(nums)
+    
+    eomi = choice(EOMIS)
+    big_eomi = '큰' + eomi[1:] if not eomi.startswith('입') else '큽' + eomi[1:]
+    small_eomi = '작은' + eomi[1:] if not eomi.startswith('입') else '작습' + eomi[1:]
+
+    # 습니다. + 습니다. -> 고, + 습니다.
+    tgt = choice(range(len(strings) - 1))
+    strings[tgt] = strings[tgt].replace('습니다.', choice(['고,', '고']))
+
+    o_1_1 = choice(t_1_1)
+    return \
+        tuple(map(lambda x: x.format(
+            num_init='\n'.join(nums), AB=' '.join(strings[:2]),
+            A=A, B=B, ops='\n'.join(ops),
+            big_eomi=big_eomi, small_eomi=small_eomi, eomi=eomi,
+        ), o_1_1))
 
 
 def comparison(num_samples_to_generate: int = 1_000) -> list:
