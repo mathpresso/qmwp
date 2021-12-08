@@ -208,6 +208,29 @@ def _ordering():
         ), o_2_4))
     )
 
+    # 2-5
+    # 도서관에 똑같은 책장이 x개 있습니다. 각 책장은 y층이고, 각 층마다 꽂혀있는 책의 수는 같습니다.
+    # subject책은 어느 책장의 한 층의 왼쪽에서 z번째, 오른쪽에서 w번째에 꽂혀 있습니다. 도서관의 책장에 꽂혀 있는 책은 모두 몇 권입니까?
+    t_2_5 = [
+        ('도서관에 똑같은 책장이 {N}개 있습니다. 각 책장은 {M}층이고, 각 층마다 꽂혀있는 책의 수는 같습니다. '
+         '{subject}책은 어느 책장의 한 층의 왼쪽에서 {left}번째, 오른쪽에서 {right}번째에 꽂혀 있습니다. 도서관의 책장에 꽂혀 있는 책은 모두 몇 권{eomi}',
+         'n0 = {N}\nn1 = {M}\nn2 = {left}\nn3 = {right}\nt0 = n0 * n1\nt1 = n2 + n3\nt2 = t1 - 1\nanswer = t0 * t2'),
+    ]
+    N = random.randint(1, 20)
+    M = random.randint(1, 20)
+    left = random.randint(1, 20)
+    right = random.randint(1, 20)
+    subject = random.choice(SUBJECTS)
+
+    eomi = random.choice(EOMIS)
+
+    o_2_5 = random.choice(t_2_5)
+    results.append(
+        tuple(map(lambda x: x.format(
+            N=N, M=M, left=left, right=right, subject=subject, eomi=eomi,
+        ), o_2_5))
+    )
+
     return results
 
 def _postprocess_results(results):
