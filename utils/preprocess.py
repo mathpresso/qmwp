@@ -1,6 +1,5 @@
 import re
 
-
 KOREAN_NUMS_REVERSE = [
     (' 일', ' 1'),
     (' 이', ' 2'),
@@ -87,7 +86,7 @@ DIGITS = [
     (' 천만', ' 10000000'),
     (' 억', ' 100000000'),
 ]
-DIGIT_UNITS = ['의 자리',  '의자리']
+DIGIT_UNITS = ['의 자리', '의자리']
 DIGIT_UNIT_TARGET = '의 자리'
 
 
@@ -167,4 +166,4 @@ assert _preprocess_number('100,000,000/2,203,133') == '100000000/2203133'
 assert _preprocess_time('일주일 전에') == '7일 전에'
 assert _preprocess_figure("정삼각형의 둘레의 길이는?") == "정3각형의 둘레의 길이는?"
 assert _preprocess_question("어떤 세 자리 수를 다섯 번 더했더니 10이 되었다. 어떤 수를 구하시오.") == \
-    '어떤 3 자리 수를 5 번 더했더니 10이 되었다. 어떤 수를 구하시오.'
+       '어떤 3 자리 수를 5 번 더했더니 10이 되었다. 어떤 수를 구하시오.'

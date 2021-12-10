@@ -1,7 +1,7 @@
 # 도형 서술
 from random import choice, randint, sample
-from utils.utils import get_answer, postprocessing
 
+from utils.utils import get_answer, postprocessing
 
 Q_EOMIS = ['입니까?', '인가요?', '인가?', '인지 구하시오.', '인지 구하세요.', '인지 구하여라.', '인지 쓰시오.',
            '인지 알아보세요.', '인지 알아보시오.', '인지 알아보아라.']
@@ -86,7 +86,7 @@ def rectangle_circumference():
     ]
 
     total = randint(4, 1000)
-    width = randint(1, total//2)
+    width = randint(1, total // 2)
 
     n = randint(3, 20)
     m = randint(3, 20)
@@ -96,7 +96,7 @@ def rectangle_circumference():
     q_eomi = choice(Q_EOMIS)
     eomi = choice(EOMIS)
     unit = choice(METER_UNITS)
-    unit_s= choice(['', ' ']) + unit
+    unit_s = choice(['', ' ']) + unit
 
     o_1_1 = choice(t_1_1)
     results.append(
@@ -176,7 +176,7 @@ def _figure() -> list:
     return results
 
 
-def figure(num_samples_to_generate: int = 1_000) -> list:
+def generate_figure(num_samples_to_generate: int = 1_000) -> list:
     """generate figure (도형서술 유형) questions
 
     Args:

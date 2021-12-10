@@ -1,8 +1,8 @@
 # 산술연산
 import random
-from utils.common import NEWLINE, PEOPLE_NAMES, OBJECTS, CONTAINERS, SUBJECTS
-from utils.utils import get_answer, postprocessing, postfix, pick_e
 
+from utils.common import CONTAINERS, NEWLINE, OBJECTS, PEOPLE_NAMES, SUBJECTS
+from utils.utils import get_answer, pick_e, postfix, postprocessing
 
 """
 simple_arithmetic_1 (add, sub)
@@ -43,6 +43,7 @@ def simple_arithmetic_1():
     """
     template: container 안에 9개의 obj이 있습니다. A가 x개의 obj을 container 안에 더 넣었습니다. container 안에 있는 obj은 모두 몇 개입니까?
     """
+
     # functions
     def init(container, H, value, obj):
         obj_str = postfix(obj, '이(가)')
@@ -773,7 +774,7 @@ def ratio_1():
     return question, model_output, code, answer
 
 
-def arithmetic_generator(num_samples_to_generate: int = 10000) -> list:
+def generate_arithmetic(num_samples_to_generate: int = 10000) -> list:
     ratio = [
         # simple arithmetic 1 (add, sub)
         (simple_arithmetic_1, 20), (simple_arithmetic_1_1, 10),

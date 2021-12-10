@@ -1,7 +1,8 @@
 # 순서정하기
 import random
+
 from utils.common import *
-from utils.utils import get_answer, postprocessing, postfix, pick_e
+from utils.utils import get_answer, pick_e, postfix, postprocessing
 
 SIMPLE_EOMIS = ['구하시오.', '구하세요.', '구하여라.', '쓰시오.',
                 '알아보세요.', '알아보시오.', '알아보아라.']
@@ -48,10 +49,10 @@ def _ordering():
     ]
 
     total = random.randint(2, 100)
-    front = random.randint(0, total-1)
-    back = random.randint(0, total-1)
-    rank = random.randint(0, total-1)
-    back_rank = random.randint(0, total-1)
+    front = random.randint(0, total - 1)
+    back = random.randint(0, total - 1)
+    rank = random.randint(0, total - 1)
+    back_rank = random.randint(0, total - 1)
 
     A = pick_e(random.choice(PEOPLE_NAMES))
     animal = random.choice(ANIMAL_NAMES)
@@ -60,9 +61,10 @@ def _ordering():
 
     o_1_1 = random.choice(t_1_1)
     results.append(
-        tuple(map(lambda x: x.format(total=total, front=front, back=back, rank=rank, 
-            back_rank=back_rank, A=A, animal=animal, animal_josa=postfix(animal, '은'), eomi=eomi,
-        ), o_1_1))
+        tuple(map(lambda x: x.format(total=total, front=front, back=back, rank=rank,
+                                     back_rank=back_rank, A=A, animal=animal, animal_josa=postfix(animal, '은'),
+                                     eomi=eomi,
+                                     ), o_1_1))
     )
 
     # 1-2 유형
@@ -79,17 +81,18 @@ def _ordering():
     total = random.randint(3, 100)
     total_1 = total - 1
     front = random.randint(1, total_1 - 1)
-    
+
     test_type = '달리기'
 
     eomi = random.choice(EOMIS)
 
     o_1_2 = random.choice(t_1_2)
     results.append(
-        tuple(map(lambda x: x.format(A=A, B=B, C=C, former=former, 
-            latter=latter, total=total, total_1=total_1, front=front, test_type=test_type, A_rank=former, B_rank=total,
-            eomi=eomi,
-        ), o_1_2))
+        tuple(map(lambda x: x.format(A=A, B=B, C=C, former=former,
+                                     latter=latter, total=total, total_1=total_1, front=front, test_type=test_type,
+                                     A_rank=former, B_rank=total,
+                                     eomi=eomi,
+                                     ), o_1_2))
     )
 
     # 1-3 유형
@@ -98,7 +101,7 @@ def _ordering():
     # reversed = 전체 - (본인 - 1)
     t_1_3_1 = [
         (['키가 작은 사람부터 순서대로 {total}명이 한 줄로 서 있습니다. {A}가 앞에서부터 {rank} 번째에 서 있습니다. '
-         '키가 큰 사람부터 순서대로 다시 줄을 서면 {A}는 앞에서부터 몇 번째에 서게 됩니까?'],
+          '키가 큰 사람부터 순서대로 다시 줄을 서면 {A}는 앞에서부터 몇 번째에 서게 됩니까?'],
          'n0 = {total}\nn1 = {rank}\nt0 = n0 - n1\nanswer = t0 + 1'),
     ]
 
@@ -108,8 +111,8 @@ def _ordering():
     seq = random.sample(range(100), seq_len)
     seq_str = ', '.join([str(i) for i in seq])
     seq_josa = postfix(seq_str, '을(를)')
-    eomi = random.choice(['에 쓰인 수를 ', '의 값을 ', '에 적힌 숫자를 ', '에 쓰인 값을 '])\
-        + random.choice(SIMPLE_EOMIS)
+    eomi = random.choice(['에 쓰인 수를 ', '의 값을 ', '에 적힌 숫자를 ', '에 쓰인 값을 ']) \
+           + random.choice(SIMPLE_EOMIS)
 
     t_1_3_all = [t_1_3_1]
     t_1_3 = random.choice(t_1_3_all)
@@ -128,7 +131,7 @@ def _ordering():
     question = q_1_3.format(A=A, total=total, rank=rank, seq=seq, seq_str=seq_str, seq_josa=seq_josa,
                             n_index=n_index, seq_n_string=seq_n_string, eomi=eomi)
     model_output = s_1_3.format(A=A, total=total, rank=rank, seq=seq, seq_str=seq_str, seq_josa=seq_josa,
-                            n_index=n_index, seq_n_string=seq_n_string, eomi=eomi)
+                                n_index=n_index, seq_n_string=seq_n_string, eomi=eomi)
     results.append((question, model_output))
 
     # 2-1 유형
@@ -245,7 +248,7 @@ def _postprocess_results(results):
     return ret
 
 
-def ordering(num_samples_to_generate: int = 1_000) -> list:
+def generate_ordering(num_samples_to_generate: int = 1_000) -> list:
     """generate ordering (순서정하기 유형) questions
 
     Args:
@@ -267,4 +270,4 @@ def ordering(num_samples_to_generate: int = 1_000) -> list:
 
 
 if __name__ == "__main__":
-    print(ordering())
+    print(generate_ordering())
