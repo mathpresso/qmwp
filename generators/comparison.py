@@ -1,8 +1,8 @@
 # 크기 비교
 from random import choice, choices, randint, sample
-from utils.common import *
-from utils.utils import get_answer, pick_e, postfix, postprocessing, generate_number
 
+from utils.common import *
+from utils.utils import generate_number, get_answer, pick_e, postfix, postprocessing
 
 SIMPLE_EOMIS = ['구하시오.', '구하세요.', '구하여라.', '쓰시오.',
                 '알아보세요.', '알아보시오.', '알아보아라.']
@@ -76,9 +76,9 @@ def c_1_1():
     """
     t_1_1 = [
         ('{AB} 누가 모은 수가 더 {big_eomi}',
-            '{num_init}\nt0 = dict()\n{ops}\nanswer = max(t0, key=t0.get)'),
+         '{num_init}\nt0 = dict()\n{ops}\nanswer = max(t0, key=t0.get)'),
         ('{AB} 누가 모은 수가 더 {small_eomi}',
-            '{num_init}\nt0 = dict()\n{ops}\nanswer = min(t0, key=t0.get)'),
+         '{num_init}\nt0 = dict()\n{ops}\nanswer = min(t0, key=t0.get)'),
     ]
     len_seq = 2
     seq = sample(PEOPLE_NAMES, len_seq)
@@ -94,18 +94,18 @@ def c_1_1():
         nums += [f"n{idx + len(nums)} = {elem}" for idx, elem in enumerate(num_seq)]
         if comma_vs_wa:
             strings.append(f"{pick_e(seq[i])}는 " + \
-                ' '.join([f'{postfix(str(j), "와(과)")}' for j in num_seq[:-1]]) + \
-                (' ' if len(num_seq) > 1 else '') + \
-                f"{postfix(str(num_seq[-1]), '을')} 모았습니다.")
+                           ' '.join([f'{postfix(str(j), "와(과)")}' for j in num_seq[:-1]]) + \
+                           (' ' if len(num_seq) > 1 else '') + \
+                           f"{postfix(str(num_seq[-1]), '을')} 모았습니다.")
         else:
             strings.append(f"{pick_e(seq[i])}는 " + \
-                ', '.join([str(j) for j in num_seq[:-1]]) + \
-                (', ' if len(num_seq) > 1 else '') + \
-                f"{postfix(str(num_seq[-1]), '을')} 모았습니다.")
+                           ', '.join([str(j) for j in num_seq[:-1]]) + \
+                           (', ' if len(num_seq) > 1 else '') + \
+                           f"{postfix(str(num_seq[-1]), '을')} 모았습니다.")
         ops.append(f"t0['{seq[i]}'] = sum([{', '.join([f'n{len(nums) - j - 1}' for j in range(num_seq_len)[::-1]])}])")
         if i == 1:
             num12_init += '\n'.join(nums)
-    
+
     eomi = choice(EOMIS)
     big_eomi = '큰' + eomi[1:] if not eomi.startswith('입') else '큽' + eomi[1:]
     small_eomi = '작은' + eomi[1:] if not eomi.startswith('입') else '작습' + eomi[1:]
@@ -140,9 +140,9 @@ def c_1_3():
     """
     t_1_3 = [
         ('{len_seq}개의 수 {seq} 있습니다. 이 중에서 {num}보다 큰 수는 모두 몇 개{eomi}',
-            '{n_init_str}\nl0 = [{seq_list}]\nresult = []\nfor i in l0:\n\tif i > {compare}:\n\t\tresult.append(i)\nanswer = len(result)'),
+         '{n_init_str}\nl0 = [{seq_list}]\nresult = []\nfor i in l0:\n\tif i > {compare}:\n\t\tresult.append(i)\nanswer = len(result)'),
         ('{len_seq}개의 수 {seq} 있습니다. 이 중에서 {num}보다 작은 수는 모두 몇 개{eomi}',
-            '{n_init_str}\nl0 = [{seq_list}]\nresult = []\nfor i in l0:\n\tif i < {compare}:\n\t\tresult.append(i)\nanswer = len(result)'),
+         '{n_init_str}\nl0 = [{seq_list}]\nresult = []\nfor i in l0:\n\tif i < {compare}:\n\t\tresult.append(i)\nanswer = len(result)'),
     ]
     len_seq = randint(2, 7)
     seq = [generate_number() for _ in range(len_seq)]
@@ -157,7 +157,7 @@ def c_1_3():
     return \
         tuple(map(lambda x: x.format(
             len_seq=len_seq, seq=postfix(', '.join(seq), '이(가)'), seq_list=', '.join(seq),
-            num=num, n_init_str=n_init_str, compare=f"n{len(seq)+1}", eomi=eomi, simple_eomi=simple_eomi,
+            num=num, n_init_str=n_init_str, compare=f"n{len(seq) + 1}", eomi=eomi, simple_eomi=simple_eomi,
         ), o_1_3))
 
 
@@ -179,9 +179,9 @@ def c_2_2():
     """
     t_2_2 = [
         ('{len_seq_kr} 수 {seq} 있습니다. {ABCs} 가장 큰 수는 어느 것{eomi}',
-            "{n_init}\nt0 = dict()\n{ops}\nanswer = max(t0, key=t0.get)"),
+         "{n_init}\nt0 = dict()\n{ops}\nanswer = max(t0, key=t0.get)"),
         ('{len_seq_kr} 수 {seq} 있습니다. {ABCs} 가장 작은 수는 어느 것{eomi}',
-            "{n_init}\nt0 = dict()\n{ops}\nanswer = min(t0, key=t0.get)"),
+         "{n_init}\nt0 = dict()\n{ops}\nanswer = min(t0, key=t0.get)"),
     ]
     possibilities = ['init']
     len_seq = randint(2, 7)
@@ -196,14 +196,14 @@ def c_2_2():
         nums.append(num)
         if p == 'init':
             strings.append(f"{seq[i]}는 {num}입니다.")
-            ops.append(f't0[\'{seq[i]}\'] = n{len(nums)-1}')
+            ops.append(f't0[\'{seq[i]}\'] = n{len(nums) - 1}')
         else:
             comp = choice([
                 (f'보다 {num} 큰', '+'),
                 (f'보다 {num} 작은', '-'),
                 (f'의 {num}배인', '*')])
             strings.append(f"{seq[i]}는 {p}{comp[0]} 수입니다.")
-            ops.append(f't0[\'{seq[i]}\'] = t0[\'{p}\'] {comp[1]} n{len(nums)-1}')        
+            ops.append(f't0[\'{seq[i]}\'] = t0[\'{p}\'] {comp[1]} n{len(nums) - 1}')
         possibilities.append(seq[i])
 
     n_init = [f"n{idx} = {elem}" for idx, elem in enumerate(nums)]
@@ -253,7 +253,7 @@ def c_2_5():
     return []
 
 
-def comparison(num_samples_to_generate: int = 1_000) -> list:
+def generate_comparison(num_samples_to_generate: int = 1_000) -> list:
     """generate comparison (크기비교 유형) questions
 
     Args:
@@ -274,4 +274,4 @@ def comparison(num_samples_to_generate: int = 1_000) -> list:
 
 
 if __name__ == "__main__":
-    print(comparison())
+    print(generate_comparison())

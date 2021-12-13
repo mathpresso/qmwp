@@ -1,9 +1,9 @@
 # 조합하기
 import random
-from itertools import permutations, combinations, product
-from utils.utils import postprocessing, get_answer
-from utils.common import COLORS, OBJECTS, ANIMAL_NAMES, PEOPLE_NAMES
+from itertools import combinations, permutations, product
 
+from utils.common import ANIMAL_NAMES, COLORS, OBJECTS, PEOPLE_NAMES
+from utils.utils import get_answer, postprocessing
 
 Q_EOMIS = ['입니까?', '인가요?', '인가?', '인지 구하시오.', '인지 구하세요.', '인지 구하여라.', '인지 쓰시오.',
            '인지 알아보세요.', '인지 알아보시오.', '인지 알아보아라.']
@@ -122,10 +122,10 @@ def comb_num_seq_counting():
     code_tuple_l = []
     for i, b in enumerate(binary_digit_str):
         if b == '1':
-            txt_l.insert(0, f'{digits_decimal_kr[i+1]}의 자리 숫자가 {rand_num_in_perm[-i-1]}')
-            code_arg_l.insert(0, int(rand_num_in_perm[-i-1]))
+            txt_l.insert(0, f'{digits_decimal_kr[i + 1]}의 자리 숫자가 {rand_num_in_perm[-i - 1]}')
+            code_arg_l.insert(0, int(rand_num_in_perm[-i - 1]))
             code_arg_l.insert(0, int(10 ** i))
-            code_tuple_l.append((i+1, int(rand_num_in_perm[-i-1])))
+            code_tuple_l.append((i + 1, int(rand_num_in_perm[-i - 1])))
 
     # problem text object
     num_seq_str = ', '.join([str(i) for i in num_seq])
@@ -167,32 +167,34 @@ def comb_num_seq_counting():
 
     tmp_rand_num_1 = random.randint(5, 15)
     tmp_rand_num_2 = random.randint(2, 4)
-    sum_l = list(map(lambda x: sum(x), combinations(range(1, tmp_rand_num_1+1), tmp_rand_num_2)))
+    sum_l = list(map(lambda x: sum(x), combinations(range(1, tmp_rand_num_1 + 1), tmp_rand_num_2)))
     tmp_rand_num_3 = random.choice(sum_l)
 
     t_1_3 = [
-        (f'{tmp_rand_num_1}보다 작은 자연수 {word_1} 서로 다른 {digits[tmp_rand_num_2]} 수를 동시에 뽑으려고 합니다. {digits[tmp_rand_num_2]} 수의 합이 {tmp_rand_num_3}인 경우의 수를 {simple_q_eomis}',
-         f'n0 = {tmp_rand_num_1}\n'
-         f'n1 = {tmp_rand_num_3}\n'
-         f't0 = list(combinations(range(1, n0), {tmp_rand_num_2}))\n'
-         f'filter_sum(t0, n1)\n'
-         f'answer = len(result)'),
+        (
+        f'{tmp_rand_num_1}보다 작은 자연수 {word_1} 서로 다른 {digits[tmp_rand_num_2]} 수를 동시에 뽑으려고 합니다. {digits[tmp_rand_num_2]} 수의 합이 {tmp_rand_num_3}인 경우의 수를 {simple_q_eomis}',
+        f'n0 = {tmp_rand_num_1}\n'
+        f'n1 = {tmp_rand_num_3}\n'
+        f't0 = list(combinations(range(1, n0), {tmp_rand_num_2}))\n'
+        f'filter_sum(t0, n1)\n'
+        f'answer = len(result)'),
     ]
 
     sample_l.append(random.choice(t_1_3))
 
     t_1_4 = [
-        (f'{num_seq_str} {word_1} {count}개를 뽑아 한 번씩 사용하여 {count_kr} 자리 수를 만들려고 합니다. 만들 수 있는 수 {word_1} {digits_decimal_kr[digit_in_count]}의 자리 숫자가 {num_in_seq_with_digit} 인 가장 큰 수를 {simple_q_eomis}',
-         f'{seq_n_string}\n'
-         f'n{seq_len} = {count}\n'
-         f'n{seq_len+1} = 1\n'
-         f'n{seq_len+2} = {count}\n'
-         f'n{seq_len+3} = {int(10 ** (digit_in_count-1))}\n'
-         f'n{seq_len+4} = {num_in_seq_with_digit}\n'
-         f'l0 = [{num_seq_str}]\n'
-         f'num_permutations(l0, n{seq_len})\n'
-         f't0 = list(filter(lambda x: str(x)[-{digit_in_count}] == str(n{seq_len+4}), result))\n'
-         f'answer = max(t0)'),
+        (
+        f'{num_seq_str} {word_1} {count}개를 뽑아 한 번씩 사용하여 {count_kr} 자리 수를 만들려고 합니다. 만들 수 있는 수 {word_1} {digits_decimal_kr[digit_in_count]}의 자리 숫자가 {num_in_seq_with_digit} 인 가장 큰 수를 {simple_q_eomis}',
+        f'{seq_n_string}\n'
+        f'n{seq_len} = {count}\n'
+        f'n{seq_len + 1} = 1\n'
+        f'n{seq_len + 2} = {count}\n'
+        f'n{seq_len + 3} = {int(10 ** (digit_in_count - 1))}\n'
+        f'n{seq_len + 4} = {num_in_seq_with_digit}\n'
+        f'l0 = [{num_seq_str}]\n'
+        f'num_permutations(l0, n{seq_len})\n'
+        f't0 = list(filter(lambda x: str(x)[-{digit_in_count}] == str(n{seq_len + 4}), result))\n'
+        f'answer = max(t0)'),
     ]
 
     sample_l.append(random.choice(t_1_4))
@@ -207,8 +209,8 @@ def comb_num_seq_counting():
         (f'{num_seq_str_1_6} 를 한 번씩만 사용하여 {digits[tmp_num_1]} 자리 수를 2개 만들려고 합니다. 만든 두 수의 차가 가장 크게 될 때 그 차는 얼마{q_eomis}',
          f'{seq_n_string_1_6}\n'
          f'n{seq_len_1_6} = 1\n'
-         f'n{seq_len_1_6+1} = {tmp_num_1}\n'
-         f'n{seq_len_1_6+2} = 2\n'
+         f'n{seq_len_1_6 + 1} = {tmp_num_1}\n'
+         f'n{seq_len_1_6 + 2} = 2\n'
          f'l0 = [{num_seq_str_1_6}]\n'
          f'num_permutations_partition_sub(l0)\n'
          f'answer = max(result)'),
@@ -276,7 +278,7 @@ def comb_choice():
 
     o1 = random.choice(OBJECTS)
 
-    tmp_num_l = random.sample(range(1,10), 2)
+    tmp_num_l = random.sample(range(1, 10), 2)
     n, r = max(tmp_num_l), min(tmp_num_l)
     color_l = random.sample(COLORS, n)
 
@@ -314,19 +316,20 @@ def comb_choice():
     sample_l.append(random.choice(t_2_1))
 
     o2 = random.choice(OBJECTS)
-    tmp_n_0 = random.randint(2,4)
-    tmp_n_1 = tmp_n_0 + random.randint(0,5)
+    tmp_n_0 = random.randint(2, 4)
+    tmp_n_1 = tmp_n_0 + random.randint(0, 5)
     animal = random.choice(ANIMAL_NAMES)
 
     tmp_w_l_0 = ['합니다.', '하는데,', '할 때,']
     tmp_w_0 = random.choice(tmp_w_l_0)
     # 분배 조합
     t_2_2 = [
-        (f'{o2} {tmp_n_1}개를 서로 다른 {digits[tmp_n_0]} 마리의 {animal}에게 나누어 주려고 {tmp_w_0} {animal}들은 적어도 {o2} 1개는 받습니다. {o2}를 나누어 주는 방법은 모두 몇 가지{q_eomis}',
-         f'n0 = {tmp_n_1}\n'
-         f'n1 = 1\n'
-         f'C(n0-1, {tmp_n_0}-1)\n'
-         f'answer = result'),
+        (
+        f'{o2} {tmp_n_1}개를 서로 다른 {digits[tmp_n_0]} 마리의 {animal}에게 나누어 주려고 {tmp_w_0} {animal}들은 적어도 {o2} 1개는 받습니다. {o2}를 나누어 주는 방법은 모두 몇 가지{q_eomis}',
+        f'n0 = {tmp_n_1}\n'
+        f'n1 = 1\n'
+        f'C(n0-1, {tmp_n_0}-1)\n'
+        f'answer = result'),
     ]
 
     sample_l.append(random.choice(t_2_2))
@@ -338,11 +341,12 @@ def comb_choice():
     # 줄세우기
     tmp_w_l_0 = ['설 때,', '세울 때,']
     t_2_3 = [
-        (f'{o_str(tmp_name_l)} {tmp_n_0}명이 한 줄로 {random.choice(tmp_w_l_0)} {o_str(tmp_name_l_2)}이가 이웃하여 서는 경우의 수를 {simple_q_eomis}',
-         f'n0 = {tmp_n_0}\n'
-         f'l0 = [{o_code(tmp_name_l)}]\n'
-         f'l1 = [{o_code(tmp_name_l_2)}]\n'
-         f'answer = math.factorial(n0-1) * 2'),
+        (
+        f'{o_str(tmp_name_l)} {tmp_n_0}명이 한 줄로 {random.choice(tmp_w_l_0)} {o_str(tmp_name_l_2)}이가 이웃하여 서는 경우의 수를 {simple_q_eomis}',
+        f'n0 = {tmp_n_0}\n'
+        f'l0 = [{o_code(tmp_name_l)}]\n'
+        f'l1 = [{o_code(tmp_name_l_2)}]\n'
+        f'answer = math.factorial(n0-1) * 2'),
     ]
 
     sample_l.append(random.choice(t_2_3))
@@ -372,10 +376,10 @@ def comb_choice():
     for coin in coin_pick:
         coin_cnt_dict[coin] = random.choice(range(1, 9))
 
-    tmp_prod_iter = product(*list(map(lambda x: range(1, x+1), coin_cnt_dict.values())))
+    tmp_prod_iter = product(*list(map(lambda x: range(1, x + 1), coin_cnt_dict.values())))
     coin_val_l = []
     for p in tmp_prod_iter:
-        coin_val_l.append(sum([x*y for x, y in zip(coin_cnt_dict.keys(), p)]))
+        coin_val_l.append(sum([x * y for x, y in zip(coin_cnt_dict.keys(), p)]))
     rand_coin_val = random.choice(coin_val_l)
 
     def tmp_coin_cotext(idx: int, coin_d: dict) -> tuple:
@@ -397,12 +401,13 @@ def comb_choice():
         return tmp_txt, tmp_code, tmp_dict_code
 
     t_2_5 = [
-        (f'{name_2_5}이가 {market_2_5}에서 {rand_coin_val}원짜리 {tmp_obj}를 사려고 한다. {tmp_coin_cotext(1, coin_cnt_dict)[0]}를 가지고 있을 때, {tmp_obj} 값을 지불하는 방법의 수는 얼마{q_eomis}',
-         f'n0 = {rand_coin_val}\n'
-         f'{tmp_coin_cotext(1, coin_cnt_dict)[1]}\n'
-         f't0 = {tmp_coin_cotext(1, coin_cnt_dict)[2]}\n'
-         f'count_coin(n0, t0)\n'
-         f'answer = result'),
+        (
+        f'{name_2_5}이가 {market_2_5}에서 {rand_coin_val}원짜리 {tmp_obj}를 사려고 한다. {tmp_coin_cotext(1, coin_cnt_dict)[0]}를 가지고 있을 때, {tmp_obj} 값을 지불하는 방법의 수는 얼마{q_eomis}',
+        f'n0 = {rand_coin_val}\n'
+        f'{tmp_coin_cotext(1, coin_cnt_dict)[1]}\n'
+        f't0 = {tmp_coin_cotext(1, coin_cnt_dict)[2]}\n'
+        f'count_coin(n0, t0)\n'
+        f'answer = result'),
     ]
 
     sample_l.append(random.choice(t_2_5))
@@ -429,7 +434,7 @@ def _comb() -> list:
     return results
 
 
-def comb(num_samples_to_generate: int = 1000):
+def generate_combination(num_samples_to_generate: int = 1000):
     """generate figure (조합하기) questions
 
     Args:

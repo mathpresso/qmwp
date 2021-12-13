@@ -6,8 +6,8 @@ from random import randint
 
 import tossi
 
-from .common import ALPHABETS_FOR_PARTICLE, NEWLINE, SPACE4
-from .predefined_func import *
+from utils.common import ALPHABETS_FOR_PARTICLE, NEWLINE, SPACE4
+from utils.predefined_func import *
 
 
 def generate_number(scale=2, starts_from=0) -> str:
@@ -22,13 +22,13 @@ def generate_number(scale=2, starts_from=0) -> str:
     cls = randint(0, 2)
     if cls == 0:
         # integer
-        return f"{randint(starts_from, 10**scale)}"
+        return f"{randint(starts_from, 10 ** scale)}"
     elif cls == 1:
         # fraction
-        return f"{randint(starts_from, 10**scale)}/{randint(1, 10**scale)}"
+        return f"{randint(starts_from, 10 ** scale)}/{randint(1, 10 ** scale)}"
     else:
         # decimal
-        return f"{randint(starts_from, 10**(scale*2))/(10**scale)}"
+        return f"{randint(starts_from, 10 ** (scale * 2)) / (10 ** scale)}"
 
 
 def is_alphabet(c):

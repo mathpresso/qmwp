@@ -1,8 +1,8 @@
 # 수 찾기
 import random
-from utils.common import NEWLINE, VARIABLES
-from utils.utils import get_answer, postprocessing, postfix
 
+from utils.common import NEWLINE, VARIABLES
+from utils.utils import get_answer, postfix, postprocessing
 
 """
 numbers_1_1
@@ -813,9 +813,9 @@ def numbers_2_3():
         init_n.append(f"n{n_index} = {digit}")
         n_index += 1
     init_n.append(f"n{n_index} = {round_digit_value}")
-    init_n.append(f"n{n_index+1} = {target_value_str}")
-    init_n.append(f"n{n_index+2} = {st}")
-    init_n.append(f"n{n_index+3} = {ed}")
+    init_n.append(f"n{n_index + 1} = {target_value_str}")
+    init_n.append(f"n{n_index + 2} = {st}")
+    init_n.append(f"n{n_index + 3} = {ed}")
 
     model_logic = []
     conds = []
@@ -830,13 +830,13 @@ def numbers_2_3():
     if conds:
         conds_str = "if {}:\n".format(" and ".join(conds))
         sol = "result = []\n" \
-              F"for i in range(n{n_index+2}, n{n_index+3} + 1):\n" \
+              F"for i in range(n{n_index + 2}, n{n_index + 3} + 1):\n" \
               f"\t{conds_str}" \
               "\t\tresult.append(i)\n" \
               "answer = len(result)"
     else:
         sol = "result = []\n" \
-              f"for i in range(n{n_index+2}, n{n_index+3} + 1):\n" \
+              f"for i in range(n{n_index + 2}, n{n_index + 3} + 1):\n" \
               "\tresult.append(i)\n" \
               "answer = len(result)"
 
@@ -911,7 +911,6 @@ def numbers_3_1():
     ])
     option2_init -= 1
 
-
     option3 = random.choice(['더 ', ''])
     cond_f, cond_strs = random.choice([
         ('max', ['큰 수를 구하시오.', '큰 수는?', '큰 수의 값은?', '큰 수의 값을 구하면?', '큰 수를 쓰시오.', '큰 수는 얼마입니까?']),
@@ -980,7 +979,7 @@ def numbers_3_2():
                   ('/', ['나눈 후', '나누고', '나누고 나서', '나눈 후에', '나눈 결과에', '나눈 값에'],
                    ['나누고', '나눈 후에', '나눈 결과를', '나눈 값을'],
                    ['나누면', '나눈 결과는', '나는 값은'], '*'),
-    ]
+                  ]
 
     eos = random.choice([
         '어떤 수를 구하시오.',
@@ -1044,13 +1043,13 @@ def numbers_3_2():
     # TODO: this should be solution 2
     t_index = 0
     for i, op_tuple in enumerate(op_lst[::-1]):
-        op = op_tuple[4] # 역함수
+        op = op_tuple[4]  # 역함수
         if i == 0:
-            model_logic.append(f't{t_index} = n{length} {op} n{length-1-i}')
+            model_logic.append(f't{t_index} = n{length} {op} n{length - 1 - i}')
         elif i == length - 1:
             model_logic.append(f'answer = t{t_index} {op} n0')
         else:
-            model_logic.append(f't{t_index+1} = t{t_index} {op} n{length-1-i}')
+            model_logic.append(f't{t_index + 1} = t{t_index} {op} n{length - 1 - i}')
             t_index += 1
 
     # TODO: consider init_x (어떤 수)
@@ -1062,7 +1061,7 @@ def numbers_3_2():
     return question, model_output, code, answer
 
 
-def numbers_generator(num_samples_to_generate: int = 10000) -> list:
+def generate_numbers(num_samples_to_generate: int = 10000) -> list:
     ratio = [
         (numbers_1_1, 10), (numbers_1_2, 15), (numbers_1_3, 10),
         (numbers_2_1, 15), (numbers_2_2, 10), (numbers_2_3, 15),
