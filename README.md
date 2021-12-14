@@ -45,13 +45,6 @@ Answer: 16
 
 ### Generate
 
-in Python Console
 ```
-from main import generate
-# generate
-data = generate(1000)
-
-# to file
-from main import generate_to_file
-generate_to_file("filename.json", 1000)
+python main.py -o problem.json -n 100
 ```
