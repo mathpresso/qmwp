@@ -1,4 +1,4 @@
-# QMWP: Qanda Math Word Problem Dataset Python
+# QMWP: Qanda Math Word Python Problem Dataset
 
 This dataset code generates mathematical question, python-code solution and answer pairs for different types of math word problems in Korean.
 

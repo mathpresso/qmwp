@@ -10,13 +10,6 @@ from generators import (
     generate_ordering,
 )
 
-import argparse
-
-parser = argparse.ArgumentParser(description="Generate Korean Math Word Problem Python")
-parser.add_argument("-o", "--output", type=str, default="problem.json", help="Output file to write generated data")
-parser.add_argument("-n", "--num_per_class", type=int, default=10, help="Number of data to generate for each class")
-args = parser.parse_args()
-
 
 def generate_to_file(path='template_dataset.json', num_per_class=10_000):
     results = generate(num_per_class)
@@ -50,4 +43,8 @@ def generate(num_per_class=10_000):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Generate Korean Math Word Problem Python")
+    parser.add_argument("-o", "--output", type=str, default="problem.json", help="Output file to write generated data")
+    parser.add_argument("-n", "--num_per_class", type=int, default=10, help="Number of data to generate for each class")
+    args = parser.parse_args()
     generate_to_file(args.output, args.num_per_class)
