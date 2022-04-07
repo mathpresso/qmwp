@@ -100,10 +100,10 @@ def rectangle_circumference():
 
     o_1_1 = choice(t_1_1)
     results.append(
-        tuple(map(lambda x: x.format(
+        (*tuple(map(lambda x: x.format(
             total=total, width=width, q_eomi=q_eomi, width_reg=width, eomi=eomi, n=n, m=m, unit=unit,
             unit_s=unit_s, mult=mult,
-        ), o_1_1))
+        ), o_1_1)), '다각형의 둘레')
     )
     return results
 
@@ -145,9 +145,9 @@ def polygon_num_of_side():
 
     o_2_1 = choice(t_2_1)
     results.append(
-        tuple(map(lambda x: x.format(
+        (*tuple(map(lambda x: x.format(
             n=n, m=m, simple_q_eomi=simple_q_eomi, q_eomi=q_eomi,
-        ), o_2_1))
+        ), o_2_1)), '다각형의 변의 수')
     )
     return results
 
@@ -165,14 +165,14 @@ def _figure() -> list:
     """
     results = []
     for i in [rectangle_circumference, polygon_num_of_side]:
-        for question, model_output in i():
+        for question, model_output, q_type in i():
             try:
                 code = postprocessing(model_output, question)
                 answer = get_answer(code)
             except:
                 print(question, model_output)
                 raise Exception("something wrong")
-            results.append((question, model_output, code, answer))
+            results.append((question, model_output, code, answer, q_type))
     return results
 
 

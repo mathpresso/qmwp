@@ -61,10 +61,10 @@ def _ordering():
 
     o_1_1 = random.choice(t_1_1)
     results.append(
-        tuple(map(lambda x: x.format(total=total, front=front, back=back, rank=rank,
+        (*tuple(map(lambda x: x.format(total=total, front=front, back=back, rank=rank,
                                      back_rank=back_rank, A=A, animal=animal, animal_josa=postfix(animal, '은'),
                                      eomi=eomi,
-                                     ), o_1_1))
+                                     ), o_1_1)), '순서 정하기 1')
     )
 
     # 1-2 유형
@@ -88,11 +88,11 @@ def _ordering():
 
     o_1_2 = random.choice(t_1_2)
     results.append(
-        tuple(map(lambda x: x.format(A=A, B=B, C=C, former=former,
+        (*tuple(map(lambda x: x.format(A=A, B=B, C=C, former=former,
                                      latter=latter, total=total, total_1=total_1, front=front, test_type=test_type,
                                      A_rank=former, B_rank=total,
                                      eomi=eomi,
-                                     ), o_1_2))
+                                     ), o_1_2)), '순서 정하기 2')
     )
 
     # 1-3 유형
@@ -132,7 +132,7 @@ def _ordering():
                             n_index=n_index, seq_n_string=seq_n_string, eomi=eomi)
     model_output = s_1_3.format(A=A, total=total, rank=rank, seq=seq, seq_str=seq_str, seq_josa=seq_josa,
                                 n_index=n_index, seq_n_string=seq_n_string, eomi=eomi)
-    results.append((question, model_output))
+    results.append((question, model_output, '순서 정하기 3'))
 
     # 2-1 유형
     # 학교에서 subject_seq의 순서로 시험을 봤습니다. x번째로 시험을 본 과목을 무엇입니까?
@@ -155,11 +155,11 @@ def _ordering():
 
     o_2_1 = random.choice(t_2_1)
     results.append(
-        tuple(map(lambda x: x.format(
+        (*tuple(map(lambda x: x.format(
             front=front, back=back, rank=rank,
             subject_seq_q=subject_seq_q, subject_seq=subject_seq, subject_i=subject_i,
             seq_str=seq_str, seq_n_string=seq_n_string, eomi=eomi,
-        ), o_2_1))
+        ), o_2_1)), '순서 찾기 1')
     )
 
     # 2-2
@@ -183,9 +183,9 @@ def _ordering():
 
     o_2_3 = random.choice(t_2_3)
     results.append(
-        tuple(map(lambda x: x.format(
+        (*tuple(map(lambda x: x.format(
             A=A, B=B, front=front, back=back, between=between, eomi=eomi,
-        ), o_2_3))
+        ), o_2_3)), '줄 세우기_전체 1')
     )
 
     # 2-4
@@ -207,9 +207,9 @@ def _ordering():
 
     o_2_4 = random.choice(t_2_4)
     results.append(
-        tuple(map(lambda x: x.format(
+        (*tuple(map(lambda x: x.format(
             A=A, front=front, back=back, left=left, right=right, eomi=eomi,
-        ), o_2_4))
+        ), o_2_4)), '줄 세우기_전체 2')
     )
 
     # 2-5
@@ -230,9 +230,9 @@ def _ordering():
 
     o_2_5 = random.choice(t_2_5)
     results.append(
-        tuple(map(lambda x: x.format(
+        (*tuple(map(lambda x: x.format(
             N=N, M=M, left=left, right=right, subject=subject, eomi=eomi,
-        ), o_2_5))
+        ), o_2_5)), '줄 세우기_전체 3')
     )
 
     return results
@@ -241,10 +241,10 @@ def _ordering():
 def _postprocess_results(results):
     ret = []
     for result in results:
-        question, model_output = result
+        question, model_output, q_type = result
         code = postprocessing(model_output, question)
         answer = get_answer(code)
-        ret.append((question, model_output, code, answer))
+        ret.append((question, model_output, code, answer, q_type))
     return ret
 
 

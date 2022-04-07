@@ -31,13 +31,14 @@ def generate(num_per_class=1):
         'q_type': q_type,
     } for question, model_output, code, answer, q_type in arithmetic_samples + numbers_samples])
 
-    for func in [generate_ordering, generate_comparison, generate_figure, generate_combination]:
-        print(f'Generating {func.__name__}')
+    for genresults in [generate_combination(12), generate_comparison(3), generate_ordering(7), generate_figure(2)]:
+        print(f'Generating more...')
         results += [{
             'code': model_output,
             'text': question,
             'answer': answer,
-        } for question, model_output, code, answer in func(num_per_class)]
+            'q_type': q_type,
+        } for question, model_output, code, answer, q_type in genresults]
 
     print(f"finished generating total of {len(results)}", results[0], sep='\n')
     return results

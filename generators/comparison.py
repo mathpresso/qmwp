@@ -59,13 +59,13 @@ def _comparison():
     for i in (c_1_1, c_1_3, c_2_2):
         while True:
             try:
-                question, model_output = i()
+                question, model_output, q_type = i()
                 code = postprocessing(model_output, question)
                 answer = get_answer(code)
                 break
             except:
                 continue
-        results.append((question, model_output, code, answer))
+        results.append((question, model_output, code, answer, q_type))
     return results
 
 
@@ -116,11 +116,11 @@ def c_1_1():
 
     o_1_1 = choice(t_1_1)
     return \
-        tuple(map(lambda x: x.format(
+        (*tuple(map(lambda x: x.format(
             num_init='\n'.join(nums), AB=' '.join(strings[:2]),
             A=A, B=B, ops='\n'.join(ops),
             big_eomi=big_eomi, small_eomi=small_eomi, eomi=eomi,
-        ), o_1_1))
+        ), o_1_1)), '절대 비교 1')
 
 
 def c_1_2():
@@ -155,10 +155,10 @@ def c_1_3():
 
     o_1_3 = choice(t_1_3)
     return \
-        tuple(map(lambda x: x.format(
+        (*tuple(map(lambda x: x.format(
             len_seq=len_seq, seq=postfix(', '.join(seq), '이(가)'), seq_list=', '.join(seq),
             num=num, n_init_str=n_init_str, compare=f"n{len(seq) + 1}", eomi=eomi, simple_eomi=simple_eomi,
-        ), o_1_3))
+        ), o_1_3)), '절대 비교 3')
 
 
 def c_2_1():
@@ -216,10 +216,10 @@ def c_2_2():
 
     o_2_2 = choice(t_2_2)
     return \
-        tuple(map(lambda x: x.format(
+        (*tuple(map(lambda x: x.format(
             len_seq_kr=len_seq_kr, seq=', '.join(seq), ABCs=' '.join(strings), n_init='\n'.join(n_init),
             ops='\n'.join(ops), eomi=eomi, simple_eomi=simple_eomi,
-        ), o_2_2))
+        ), o_2_2)), '절대 비교 4')
 
 
 def c_2_3():
