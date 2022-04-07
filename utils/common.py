@@ -1,7 +1,7 @@
 import string
 from pathlib import Path
 
-PEOPLE_NAMES = list(set([i.rstrip() for i in open(Path(__file__).parent / "names.txt").readlines()]))
+PEOPLE_NAMES = list(set([i.rstrip() for i in open(Path(__file__).parent / "names.txt", encoding='utf-8').readlines()]))
 ANIMAL_NAMES = ['토끼', '개', '고양이', '강아지', '염소', '사슴', '사자', '호랑이', '얼룩말', '쥐',
                 '뱀', '소', '원숭이', '닭', '돼지', '거북이', '말']
 CONTAINERS = ['상자', '컵', '박스', '봉투', '가방', '통']

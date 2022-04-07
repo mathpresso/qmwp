@@ -41,9 +41,10 @@ ratio_1
 
 def simple_arithmetic_1():
     """
+    단순 산술 연산 1
     template: container 안에 9개의 obj이 있습니다. A가 x개의 obj을 container 안에 더 넣었습니다. container 안에 있는 obj은 모두 몇 개입니까?
     """
-
+    q_type = '단순 산술 연산 1'
     # functions
     def init(container, H, value, obj):
         obj_str = postfix(obj, '이(가)')
@@ -225,14 +226,15 @@ def simple_arithmetic_1():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def simple_arithmetic_1_1():
     """
+    단순 산술 연산 2
     template: "subject 책 x권 중에서 y권을 읽었는데 subject 책 z권을 선물 받았습니다. 읽지 않은 subject 책은 몇 권입니까?"
     """
-
+    q_type = '단순 산술 연산 2'
     all_str = random.choice(["모두 ", "전부 ", ""])
     obj = random.choice(["동화책", "책", "만화책", "소설책", "수학책"])
     obj_option = random.choice([f"{obj} ", ""])
@@ -286,16 +288,18 @@ def simple_arithmetic_1_1():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def simple_arithmetic_2_1():
     """
+    단순 산술 연산 3
     template: "obj이 x개씩 y봉지, 낱개 z개 있습니다. obj은 모두 몇 개입니까?
                obj가 x장씩 y묶음과 낱개로 z장 있습니다. obj는 모두 몇 장입니까?
                A는 줄넘기를 x번씩 y회한후 z번을 더 했습니다. A는 줄넘기를 모두 몇 번 했습니까?
                A가 obj을 x송이씩 꽃병 y개에 꽂았는데 z송이가 남았습니다. obj은 모두 몇 송이입니까?"
     """
+    q_type = '단순 산술 연산 3'
     obj = random.choice(OBJECTS)
     obj_e = postfix(obj, '이')
     obj_n = postfix(obj, '은')
@@ -321,14 +325,14 @@ def simple_arithmetic_2_1():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def equation_1():
     """
     template: "합이 x이고 차가 y인 두 수가 있습니다. 두 수 중에서 더 작은 수를 구하시오."
     """
-
+    q_type = '수식 계산 1'
     model_logic = []
     op_str = random.choice([
         "큰",
@@ -354,14 +358,14 @@ def equation_1():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def equation_2():
     """
     template: "A가 책을 펼쳤는데 두 쪽수의 합이 x이었습니다. A가 펼친 두 쪽수 중 큰 수를 쓰시오."
     """
-
+    q_type = '수식 계산 2'
     person = random.choice(PEOPLE_NAMES)
     person_e = pick_e(person)
     subject = random.choice(SUBJECTS + [""])
@@ -400,14 +404,14 @@ def equation_2():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def equation_3():
     """
     template: "obj1과 obj2이 모두 합해서 x개 있습니다. obj1이 obj2보다 y개 더 적다면 obj1은 몇 개 있습니까?"
     """
-
+    q_type = '수식 계산 3'
     obj1, obj2 = random.sample(OBJECTS, 2)
     obj1_w = postfix(obj1, '와')
     obj2_e = postfix(obj2, '이')
@@ -494,14 +498,14 @@ def equation_3():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def range_condition_1():
     """
     template: "a부터 b까지의 홀수의 합을 구하시오."
     """
-
+    q_type = '수의 범위'
     start, end = sorted(random.sample(range(1, 1000), 2))
     if end + 20 < start:
         end = random.randint(start + 20, 1100)
@@ -614,7 +618,7 @@ def range_condition_1():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def average_1():
@@ -622,7 +626,7 @@ def average_1():
     template: "A, B, C의 수학점수는 각각 x점, y점, z점입니다. 이 셋을 제외한 학급의 수학점수 평균은 a점입니다.
                A네 학급 인원수가 b명일 때, 학급 수학 평균 점수는 몇 점입니까?"
     """
-
+    q_type = '평균 계산'
     count = random.randint(2, 5)
     people = random.sample(PEOPLE_NAMES, count)
     subject = random.choice(SUBJECTS)
@@ -686,7 +690,7 @@ def average_1():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def ratio_1():
@@ -694,7 +698,7 @@ def ratio_1():
     template: "A네 반 전체 학생 수는 x명입니다. 그중에서 남학생은 전체의 y_fraction 입니다. 남학생 중에서 안경을 낀 학생은
                남학생 전체의 z_fraction 입니다. A네 반에서 안경을 끼지 않은 남학생은 몇 명입니까?"
     """
-
+    q_type = '비율'
     p = random.choice(PEOPLE_NAMES)
     s = random.choice(["남학생", "여학생"])
     target_s = random.choice(["남학생", "여학생"])
@@ -771,23 +775,23 @@ def ratio_1():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def generate_arithmetic(num_samples_to_generate: int = 10000) -> list:
     ratio = [
         # simple arithmetic 1 (add, sub)
-        (simple_arithmetic_1, 20), (simple_arithmetic_1_1, 10),
+        (simple_arithmetic_1, 1), (simple_arithmetic_1_1, 1),
         # simple arithmetic 2 (mul)
-        (simple_arithmetic_2_1, 6),
+        (simple_arithmetic_2_1, 1),
         # equation
-        (equation_1, 10), (equation_2, 10), (equation_3, 10),
+        (equation_1, 1), (equation_2, 1), (equation_3, 1),
         # range condition
-        (range_condition_1, 25),
+        (range_condition_1, 1),
         # average
-        (average_1, 20),
+        (average_1, 1),
         # ratio
-        (ratio_1, 20),
+        (ratio_1, 1),
     ]
     targets = []
     for func, count in ratio:
