@@ -36,6 +36,7 @@ def numbers_1_1():
     """
     template: x개의 수 a, b, c, d가 있습니다. 그 중에서 가장 큰 수와 가장 작은 수의 차는 얼마입니까?
     """
+    q_type = '수 찾기 1'
     eos_d = {
         1: [
             '얼마인가요?',
@@ -183,14 +184,14 @@ def numbers_1_1():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def numbers_1_2():
     """
     template: "a, b, c, d 중에서 서로 다른 숫자 x개를 뽑아 만들 수 있는 세 자리 수 중에서 가장 작은 수를 쓰시오."
     """
-
+    q_type = '수 찾기 2'
     options1 = [
         "",
         "숫자 카드 ",
@@ -249,7 +250,7 @@ def numbers_1_2():
     code = postprocessing(model_output, question)
     answer = get_answer(code)
 
-    return question, model_output, code, answer
+    return question, model_output, code, answer, q_type
 
 
 def numbers_1_3():
@@ -344,8 +345,8 @@ def numbers_1_3():
     model_output = NEWLINE.join(model_output_lst)
     code = postprocessing(model_output, question)
     answer = get_answer(code)
-
-    return question, model_output, code, answer
+    q_type = '수 찾기 3'
+    return question, model_output, code, answer, q_type
 
 
 def numbers_2_1():
@@ -551,8 +552,8 @@ def numbers_2_1():
     model_output = NEWLINE.join(init_n + model_logic)
     code = postprocessing(model_output, question)
     answer = get_answer(code)
-
-    return question, model_output, code, answer
+    q_type = '수 찾기 4'
+    return question, model_output, code, answer, q_type
 
 
 def numbers_2_2(solution_id=1):
@@ -722,8 +723,8 @@ def numbers_2_2(solution_id=1):
     model_output = NEWLINE.join(model_output_lst)
     code = postprocessing(model_output, question)
     answer = get_answer(code)
-
-    return question, model_output, code, answer
+    q_type = '수 찾기 5'
+    return question, model_output, code, answer, q_type
 
 
 def numbers_2_3():
@@ -845,8 +846,8 @@ def numbers_2_3():
     model_output = NEWLINE.join(model_output_lst)
     code = postprocessing(model_output, question)
     answer = get_answer(code)
-
-    return question, model_output, code, answer
+    q_type = '수 찾기 6'
+    return question, model_output, code, answer, q_type
 
 
 def numbers_3_1():
@@ -954,8 +955,8 @@ def numbers_3_1():
     model_output = NEWLINE.join(model_output_lst)
     code = postprocessing(model_output, question)
     answer = get_answer(code)
-
-    return question, model_output, code, answer
+    q_type = '수 찾기 7'
+    return question, model_output, code, answer, q_type
 
 
 def numbers_3_2():
@@ -1057,8 +1058,8 @@ def numbers_3_2():
     model_output = NEWLINE.join(model_output_lst)
     code = postprocessing(model_output, question)
     answer = get_answer(code)
-
-    return question, model_output, code, answer
+    q_type = '일차방정식'
+    return question, model_output, code, answer, q_type
 
 
 def generate_numbers(num_samples_to_generate: int = 10000) -> list:

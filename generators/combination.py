@@ -415,10 +415,26 @@ def comb_choice():
     return sample_l
 
 
+category_name = {
+    '00': '경우의 수 1',
+    '01': '경우의 수 2',
+    '02': '경우의 수 3',
+    '03': '경우의 수 4',
+    '04': '경우의 수 5',
+    '05': '경우의 수 6',
+    '06': '경우의 수 7',
+    '10': '조합 1',
+    '11': '조합 2',
+    '12': '순열 1',
+    '13': '순열 2',
+    '14': '금액 지불',
+}
+
+
 def _comb() -> list:
     results = []
-    for i in [comb_num_seq_counting, comb_choice]:
-        for question, model_output in i():
+    for outer_idx, i in enumerate([comb_num_seq_counting, comb_choice]):
+        for inner_idx, (question, model_output) in enumerate(i()):
             try:
                 code = postprocessing(model_output, question)
                 answer = get_answer(code)
@@ -430,7 +446,7 @@ def _comb() -> list:
                 print('==========code==========')
                 print(code)
                 raise Exception("something wrong_comb")
-            results.append((question, model_output, code, answer))
+            results.append((question, model_output, code, answer, f"{category_name[f'{outer_idx}{inner_idx}']}"))
     return results
 
 
